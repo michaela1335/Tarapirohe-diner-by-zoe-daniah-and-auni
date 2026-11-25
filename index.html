@@ -1,0 +1,2412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Tarapirohe Diner</title>
+  <!-- Google Fonts for cozy hand-drawn sketchbook aesthetic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS for responsive layout utilities -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --cream: #FAF5EE;
+      --oat: #EFE6D8;
+      --latte: #8C6D53;
+      --latte-dark: #6D523C;
+      --sage: #9CAF88;
+      --slate: #7B9095;
+      --terracotta: #C87D65;
+      --ink: #3B322C;
+      --paper-shadow: rgba(59, 50, 44, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #E8DEC8;
+      color: var(--ink);
+      font-family: 'Quicksand', sans-serif;
+      overflow: hidden;
+      height: 100dvh;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1, h2, h3, .doodle-font {
+      font-family: 'Patrick Hand', cursive;
+      letter-spacing: 0.02em;
+    }
+
+    /* Subtle paper texture overlay */
+    .paper-texture {
+      background-color: var(--cream);
+      background-image:
+        radial-gradient(rgba(140, 109, 83, 0.07) 1px, transparent 0),
+        radial-gradient(rgba(59, 50, 44, 0.05) 1px, transparent 0);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+    }
+
+    /* Hand-drawn organic wobbly borders */
+    .doodle-box {
+      border: 3px solid var(--ink);
+      border-radius: 22px 18px 25px 16px / 18px 24px 16px 22px;
+      box-shadow: 4px 5px 0px var(--ink);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .doodle-card {
+      border: 2.5px solid var(--ink);
+      border-radius: 18px 22px 16px 20px / 20px 16px 22px 18px;
+      box-shadow: 3px 4px 0px rgba(59, 50, 44, 0.22);
+    }
+
+    .doodle-btn {
+      border: 3px solid var(--ink);
+      border-radius: 18px 24px 16px 22px / 22px 16px 24px 18px;
+      box-shadow: 3px 4px 0px var(--ink);
+      font-family: 'Patrick Hand', cursive;
+      cursor: pointer;
+      transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease, background-color 0.15s ease;
+    }
+
+    .doodle-btn:hover {
+      transform: translateY(-2px) rotate(-0.5deg);
+      box-shadow: 4px 6px 0px var(--ink);
+    }
+
+    .doodle-btn:active {
+      transform: translateY(2px) scale(0.97);
+      box-shadow: 1px 1px 0px var(--ink);
+    }
+
+    /* Gentle floating & bobbing doodle animations */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-6px) rotate(1.2deg); }
+    }
+
+    @keyframes birdHop {
+      0%, 100% { transform: translateY(0px) scaleY(1); }
+      40% { transform: translateY(-10px) scaleY(1.03); }
+      70% { transform: translateY(2px) scaleY(0.96); }
+    }
+
+    @keyframes predatorSneak {
+      0%, 100% { transform: rotate(-3deg) translateY(0px); }
+      50% { transform: rotate(3deg) translateY(-4px); }
+    }
+
+    @keyframes lampSway {
+      0%, 100% { transform: rotate(-2deg); }
+      50% { transform: rotate(2deg); }
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.82) translateY(12px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @keyframes shakeGentle {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-7px) rotate(-1deg); }
+      40% { transform: translateX(7px) rotate(1deg); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+
+    @keyframes coinFloat {
+      0% { opacity: 0; transform: translate(-50%, 8px) scale(0.75); }
+      20% { opacity: 1; transform: translate(-50%, -8px) scale(1.1); }
+      80% { opacity: 1; transform: translate(-50%, -34px) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -48px) scale(0.95); }
+    }
+
+    @keyframes coinLossFloat {
+      0% { opacity: 0; transform: translate(-50%, -8px) scale(0.85); }
+      20% { opacity: 1; transform: translate(-50%, 4px) scale(1.1); }
+      80% { opacity: 1; transform: translate(-50%, 26px) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, 38px) scale(0.95); }
+    }
+
+    .animate-float { animation: floatSlow 3.6s ease-in-out infinite; }
+    .animate-hop { animation: birdHop 1.8s ease-in-out infinite; }
+    .animate-sneak { animation: predatorSneak 0.7s ease-in-out infinite; }
+    .animate-lamp { transform-origin: top center; animation: lampSway 4.5s ease-in-out infinite; }
+    .animate-pop { animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+    .animate-shake { animation: shakeGentle 0.4s ease-in-out; }
+    .animate-coin-float { animation: coinFloat 1.25s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+    .animate-coin-loss { animation: coinLossFloat 1.25s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+    /* Custom Scrollbar for Diet Guide & Shop */
+    .cozy-scroll::-webkit-scrollbar {
+      width: 8px;
+      height: 6px;
+    }
+    .cozy-scroll::-webkit-scrollbar-track {
+      background: var(--oat);
+      border-radius: 10px;
+    }
+    .cozy-scroll::-webkit-scrollbar-thumb {
+      background: var(--latte);
+      border-radius: 10px;
+      border: 2px solid var(--oat);
+    }
+
+    /* Raindrop animation inside windows */
+    @keyframes rainFall {
+      0% { transform: translateY(-15px) translateX(4px); opacity: 0; }
+      30% { opacity: 0.75; }
+      100% { transform: translateY(130px) translateX(-14px); opacity: 0; }
+    }
+    .rain-streak {
+      animation: rainFall 1.1s linear infinite;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Main App Container (Fits Chromebook & iPad/iPhone cleanly without overflow) -->
+  <div id="app" class="relative w-full h-full max-w-5xl max-h-[820px] paper-texture sm:rounded-3xl sm:border-[3.5px] sm:border-[#3B322C] sm:shadow-[0_14px_40px_rgba(59,50,44,0.25)] overflow-hidden flex flex-col">
+
+    <!-- Persistent Top-Right Coin Counter & Quick Audio Mute Toggle -->
+    <div class="absolute top-3 right-3 z-40 flex items-center gap-2">
+      <button onclick="openShopFromAnywhere()" aria-label="Open Cozy Shop"
+        class="doodle-btn bg-[#F6E3BA] hover:bg-[#EED5A0] px-3 py-1.5 flex items-center gap-1.5 text-sm sm:text-base font-bold text-[#3B322C]">
+        <span>🪙</span>
+        <span class="global-coin-count">25</span>
+      </button>
+      <button id="quick-audio-btn" onclick="toggleQuickMute()" aria-label="Toggle Sound"
+        class="doodle-btn bg-[#EFE6D8] hover:bg-[#E5D8C5] px-3 py-1.5 flex items-center gap-1.5 text-sm sm:text-base font-bold text-[#3B322C]">
+        <span id="quick-audio-icon">🔊</span>
+        <span id="quick-audio-label" class="hidden sm:inline">Sound On</span>
+      </button>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- 1. START SCREEN                                           -->
+    <!-- ========================================================= -->
+    <section id="screen-start" class="relative w-full h-full flex flex-col items-center justify-between p-4 sm:p-8 overflow-hidden">
+     
+      <!-- Cozy Illustrated Cafe Background SVG -->
+      <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 900 650" preserveAspectRatio="xMidYMid slice">
+        <!-- Warm Wall & Wooden Wainscoting -->
+        <rect width="900" height="650" fill="#FAF5EE" />
+        <rect y="430" width="900" height="220" fill="#DFD1BC" />
+        <line x1="0" y1="430" x2="900" y2="430" stroke="#3B322C" stroke-width="3" />
+        <!-- Vertical wood planks -->
+        <g stroke="#C7B69E" stroke-width="2">
+          <line x1="90" y1="430" x2="90" y2="650" />
+          <line x1="180" y1="430" x2="180" y2="650" />
+          <line x1="270" y1="430" x2="270" y2="650" />
+          <line x1="360" y1="430" x2="360" y2="650" />
+          <line x1="450" y1="430" x2="450" y2="650" />
+          <line x1="540" y1="430" x2="540" y2="650" />
+          <line x1="630" y1="430" x2="630" y2="650" />
+          <line x1="720" y1="430" x2="720" y2="650" />
+          <line x1="810" y1="430" x2="810" y2="650" />
+        </g>
+
+        <!-- Cozy Cafe Windows (Left & Right) -->
+        <!-- Left Window -->
+        <g transform="translate(65, 95)">
+          <rect x="0" y="0" width="190" height="220" rx="18" fill="#DCE6E8" stroke="#3B322C" stroke-width="3.5" />
+          <!-- Soft misty hills & river outside -->
+          <path d="M 3 150 Q 60 120 120 145 T 187 135 L 187 217 L 3 217 Z" fill="#B6C6B2" />
+          <path d="M 3 175 Q 95 160 187 180 L 187 217 L 3 217 Z" fill="#9BB3B8" />
+          <!-- Raindrops on glass -->
+          <g stroke="#7B9095" stroke-width="2" stroke-linecap="round" opacity="0.6">
+            <line x1="35" y1="30" x2="28" y2="50" />
+            <line x1="80" y1="65" x2="73" y2="85" />
+            <line x1="140" y1="35" x2="133" y2="55" />
+            <line x1="120" y1="100" x2="113" y2="120" />
+            <line x1="50" y1="115" x2="43" y2="135" />
+          </g>
+          <!-- Window Panes -->
+          <line x1="95" y1="0" x2="95" y2="220" stroke="#3B322C" stroke-width="3" />
+          <line x1="0" y1="110" x2="190" y2="110" stroke="#3B322C" stroke-width="3" />
+          <rect x="-8" y="216" width="206" height="14" rx="6" fill="#C9B398" stroke="#3B322C" stroke-width="3" />
+        </g>
+
+        <!-- Right Window -->
+        <g transform="translate(645, 95)">
+          <rect x="0" y="0" width="190" height="220" rx="18" fill="#DCE6E8" stroke="#3B322C" stroke-width="3.5" />
+          <path d="M 3 145 Q 75 125 140 150 T 187 140 L 187 217 L 3 217 Z" fill="#B6C6B2" />
+          <path d="M 3 180 Q 100 165 187 182 L 187 217 L 3 217 Z" fill="#9BB3B8" />
+          <g stroke="#7B9095" stroke-width="2" stroke-linecap="round" opacity="0.6">
+            <line x1="45" y1="40" x2="38" y2="60" />
+            <line x1="110" y1="30" x2="103" y2="50" />
+            <line x1="150" y1="75" x2="143" y2="95" />
+            <line x1="65" y1="95" x2="58" y2="115" />
+          </g>
+          <line x1="95" y1="0" x2="95" y2="220" stroke="#3B322C" stroke-width="3" />
+          <line x1="0" y1="110" x2="190" y2="110" stroke="#3B322C" stroke-width="3" />
+          <rect x="-8" y="216" width="206" height="14" rx="6" fill="#C9B398" stroke="#3B322C" stroke-width="3" />
+        </g>
+
+        <!-- Start Screen Equipped Fairy Lights Preview -->
+        <g id="start-decor-fairy_lights" class="hidden">
+          <path d="M 0 28 Q 225 68 450 32 Q 675 68 900 28" fill="none" stroke="#3B322C" stroke-width="2.5" />
+          <circle cx="110" cy="45" r="7" fill="#FFE793" stroke="#3B322C" stroke-width="2" />
+          <circle cx="225" cy="52" r="7" fill="#F8C697" stroke="#3B322C" stroke-width="2" />
+          <circle cx="340" cy="43" r="7" fill="#FFE793" stroke="#3B322C" stroke-width="2" />
+          <circle cx="560" cy="43" r="7" fill="#FFE793" stroke="#3B322C" stroke-width="2" />
+          <circle cx="675" cy="52" r="7" fill="#F8C697" stroke="#3B322C" stroke-width="2" />
+          <circle cx="790" cy="45" r="7" fill="#FFE793" stroke="#3B322C" stroke-width="2" />
+        </g>
+
+        <!-- Hanging Doodle Lamps -->
+        <g class="animate-lamp" transform="translate(310, 0)">
+          <line x1="0" y1="0" x2="0" y2="65" stroke="#3B322C" stroke-width="3" />
+          <path d="M -26 85 Q 0 55 26 85 Z" fill="#E6B87D" stroke="#3B322C" stroke-width="3" />
+          <circle cx="0" cy="88" r="7" fill="#FFF3D1" stroke="#3B322C" stroke-width="2" />
+        </g>
+        <g class="animate-lamp" style="animation-delay: -1.5s;" transform="translate(590, 0)">
+          <line x1="0" y1="0" x2="0" y2="55" stroke="#3B322C" stroke-width="3" />
+          <path d="M -24 75 Q 0 48 24 75 Z" fill="#C87D65" stroke="#3B322C" stroke-width="3" />
+          <circle cx="0" cy="78" r="7" fill="#FFF3D1" stroke="#3B322C" stroke-width="2" />
+        </g>
+
+        <!-- Cozy Potted Plants on Windowsills -->
+        <g transform="translate(105, 282)">
+          <path d="M 0 0 L 24 0 L 20 28 L 4 28 Z" fill="#C87D65" stroke="#3B322C" stroke-width="2.5" />
+          <path d="M 12 0 Q 2 -18 -6 -10 Q 2 -2 12 0" fill="#9CAF88" stroke="#3B322C" stroke-width="2" />
+          <path d="M 12 0 Q 22 -20 30 -10 Q 20 -2 12 0" fill="#9CAF88" stroke="#3B322C" stroke-width="2" />
+          <path d="M 12 0 Q 12 -26 12 -14" stroke="#3B322C" stroke-width="2" />
+        </g>
+
+        <!-- Foreground Wooden Cafe Counter -->
+        <rect x="-10" y="510" width="920" height="150" fill="#9C7A5C" stroke="#3B322C" stroke-width="3.5" />
+        <rect x="-10" y="495" width="920" height="22" rx="6" fill="#B59272" stroke="#3B322C" stroke-width="3.5" />
+      </svg>
+
+      <!-- Top Spacer & Cute Badge -->
+      <div class="relative z-10 mt-8 sm:mt-4 flex flex-col items-center text-center animate-pop">
+        <span class="px-3.5 py-1 rounded-full bg-[#EFE6D8] border-2 border-[#3B322C] text-xs sm:text-sm font-bold text-[#6D523C] shadow-[2px_2px_0px_#3B322C] mb-2">
+          Aotearoa New Zealand • Braided River &amp; Coast Cafe
+        </span>
+        <div class="bg-[#FAF5EE]/95 doodle-box px-6 sm:px-10 py-3 sm:py-5">
+          <h1 class="text-4xl sm:text-6xl md:text-7xl font-bold text-[#3B322C] tracking-wide drop-shadow-[2px_2px_0px_#EFE6D8]">
+            Tarapirohe Diner
+          </h1>
+          <p class="text-sm sm:text-lg text-[#6D523C] font-semibold mt-1">
+            Serve seasonal treats, earn coins, &amp; decorate your cozy cafe!
+          </p>
+        </div>
+      </div>
+
+      <!-- Center Cute Tarapirohe Doodle Mascot on Counter -->
+      <div class="relative z-10 my-auto flex flex-col items-center animate-float">
+        <div class="relative">
+          <!-- Cute Speech Bubble -->
+          <div class="bg-[#FAF5EE] border-2 border-[#3B322C] rounded-2xl px-4 py-1.5 text-sm sm:text-base font-bold text-[#3B322C] shadow-[2px_3px_0px_#3B322C] mb-1 text-center">
+            "Cheep! Ready to open the diner?"
+          </div>
+          <!-- Hand-drawn Tarapirohe SVG -->
+          <svg class="w-36 h-36 sm:w-44 sm:h-44 mx-auto drop-shadow-[0_6px_0_rgba(59,50,44,0.15)]" viewBox="0 0 200 180">
+            <!-- Little orange legs -->
+            <path d="M 85 135 L 80 162 M 73 162 L 87 162" stroke="#E06D3B" stroke-width="4.5" stroke-linecap="round" />
+            <path d="M 115 135 L 120 162 M 113 162 L 127 162" stroke="#E06D3B" stroke-width="4.5" stroke-linecap="round" />
+            <!-- Tail feathers -->
+            <path d="M 135 110 L 178 96 L 165 114 L 180 122 L 135 124 Z" fill="#A5B1B5" stroke="#3B322C" stroke-width="3" stroke-linejoin="round" />
+            <!-- Plump Slate-Grey Body -->
+            <path d="M 55 95 C 52 135, 118 145, 145 115 C 155 102, 142 82, 118 82 C 92 82, 62 72, 55 95 Z" fill="#B6C0C4" stroke="#3B322C" stroke-width="3.2" />
+            <!-- Soft White Underbelly -->
+            <path d="M 62 112 C 75 132, 115 134, 134 118" fill="none" stroke="#FAF5EE" stroke-width="6" stroke-linecap="round" />
+            <!-- Wing Doodle -->
+            <path d="M 82 95 C 102 88, 132 95, 142 108 C 122 118, 95 115, 82 95 Z" fill="#98A4A8" stroke="#3B322C" stroke-width="2.5" />
+            <!-- Head -->
+            <circle cx="68" cy="70" r="26" fill="#B6C0C4" stroke="#3B322C" stroke-width="3.2" />
+            <!-- Signature Black Cap -->
+            <path d="M 43 66 C 43 44, 88 40, 93 64 C 82 60, 58 60, 43 66 Z" fill="#2E2926" stroke="#3B322C" stroke-width="2.5" />
+            <!-- Signature White Cheek Stripe (albostriatus) -->
+            <path d="M 45 71 Q 66 66 88 72" fill="none" stroke="#FAF5EE" stroke-width="5.5" stroke-linecap="round" />
+            <!-- Bright Orange-Red Bill -->
+            <path d="M 44 68 L 16 74 L 44 79 Z" fill="#E86A33" stroke="#3B322C" stroke-width="2.8" stroke-linejoin="round" />
+            <!-- Cute Expressive Eye -->
+            <circle cx="60" cy="63" r="4" fill="#1F1B18" />
+            <circle cx="61.5" cy="61.5" r="1.4" fill="#FFFFFF" />
+            <!-- Rosy Doodle Cheek -->
+            <ellipse cx="67" cy="77" rx="5" ry="3" fill="#E39B88" opacity="0.7" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Menu Buttons (Start, Shop, Diet Guide, Settings) -->
+      <div class="relative z-10 w-full max-w-2xl grid grid-cols-2 sm:flex sm:flex-row items-center justify-center gap-2.5 sm:gap-3 mb-2 sm:mb-4">
+        <button onclick="startGame()" class="doodle-btn col-span-2 sm:flex-1 bg-[#9CAF88] hover:bg-[#8FA47A] text-[#3B322C] text-2xl sm:text-3xl font-bold py-3 px-6">
+          Start Shift
+        </button>
+        <button onclick="openShop('decor')" class="doodle-btn bg-[#F6E3BA] hover:bg-[#EED5A0] text-[#3B322C] text-xl sm:text-2xl font-bold py-3 px-5 flex items-center justify-center gap-1.5">
+          <span>🛍️</span><span>Shop</span>
+        </button>
+        <button onclick="showScreen('guide')" class="doodle-btn bg-[#EFE6D8] hover:bg-[#E4D7C3] text-[#3B322C] text-xl sm:text-2xl font-bold py-3 px-5">
+          Diet Guide
+        </button>
+        <button onclick="showScreen('settings')" class="doodle-btn col-span-2 sm:col-span-1 bg-[#EFE6D8] hover:bg-[#E4D7C3] text-[#3B322C] text-xl sm:text-2xl font-bold py-3 px-5">
+          Settings
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 2. DIET GUIDE SCREEN                                      -->
+    <!-- ========================================================= -->
+    <section id="screen-guide" class="hidden w-full h-full flex flex-col p-4 sm:p-6 overflow-hidden">
+      <div class="flex items-center justify-between mb-3 pr-40 sm:pr-48">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-bold text-[#3B322C]">Tarapirohe Field &amp; Menu Guide</h2>
+          <p class="text-xs sm:text-sm text-[#6D523C] font-semibold">Chlidonias albostriatus • Black-fronted Tern Seasonal Menu</p>
+        </div>
+      </div>
+
+      <!-- Scrollable Notebook Content -->
+      <div class="flex-1 overflow-y-auto cozy-scroll pr-1 space-y-4">
+       
+        <!-- Intro Banner -->
+        <div class="bg-[#EFE6D8] doodle-card p-4 flex flex-col sm:flex-row items-center gap-4">
+          <div class="text-4xl">📖</div>
+          <p class="text-sm sm:text-base font-semibold text-[#3B322C] leading-relaxed">
+            Unlike most terns that only eat seafood, the <span class="underline decoration-[#C87D65] decoration-2">Tarapirohe</span> changes its menu with the seasons—foraging across braided rivers, farmland paddocks, and the coastal ocean! Unlock extra regional foods in the <strong>Shop</strong>!
+          </p>
+        </div>
+
+        <!-- 3 Seasonal Menu Cards (Dynamically populated so locked items show status) -->
+        <div id="guide-cards-container" class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+          <!-- Populated via renderDietGuide() -->
+        </div>
+
+        <!-- Predator Safety Tip -->
+        <div class="bg-[#F6E6DF] doodle-card p-3.5 flex items-center gap-3">
+          <span class="text-2xl sm:text-3xl">🥄</span>
+          <div class="text-xs sm:text-sm text-[#3B322C]">
+            <strong>Watch out for Predators!</strong> Rarely, an introduced predator (like a stoat) sneaks up to the counter. Move with <strong>Left / Right Arrow keys</strong> (or on-screen arrows) and press <strong>Down Arrow</strong> (or <strong>Shoo!</strong>) to earn a <strong>+15 🪙 Hero Tip</strong>!
+          </div>
+        </div>
+      </div>
+
+      <!-- Back Button -->
+      <div class="pt-3 flex justify-center gap-3">
+        <button onclick="showScreen('start')" class="doodle-btn bg-[#8C6D53] hover:bg-[#7A5E46] text-[#FAF5EE] text-xl sm:text-2xl font-bold py-2.5 px-8">
+          ← Back to Diner
+        </button>
+        <button onclick="openShop('foods')" class="doodle-btn bg-[#F6E3BA] hover:bg-[#EED5A0] text-[#3B322C] text-xl sm:text-2xl font-bold py-2.5 px-6">
+          🛍️ Visit Shop
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 3. SETTINGS SCREEN                                        -->
+    <!-- ========================================================= -->
+    <section id="screen-settings" class="hidden w-full h-full flex flex-col items-center justify-between p-4 sm:p-8 overflow-y-auto">
+      <div class="w-full max-w-lg text-center mt-6 sm:mt-2">
+        <h2 class="text-4xl sm:text-5xl font-bold text-[#3B322C]">Diner Settings</h2>
+        <p class="text-sm text-[#6D523C] font-semibold">Customize your cozy soundscape, controls &amp; save data</p>
+      </div>
+
+      <div class="w-full max-w-lg bg-[#EFE6D8] doodle-box p-5 sm:p-6 space-y-4 my-auto">
+       
+        <!-- Lo-fi Music Toggle -->
+        <div class="flex items-center justify-between gap-4 pb-3 border-b-2 border-dashed border-[#3B322C]/25">
+          <div>
+            <div class="text-xl doodle-font font-bold text-[#3B322C]">🎹 Calm Lo-Fi Piano</div>
+            <div class="text-xs text-[#6D523C]">Warm Rhodes chords in the background</div>
+          </div>
+          <button id="toggle-music" onclick="toggleAudioSetting('music')" class="doodle-btn px-4 py-1.5 text-lg font-bold bg-[#9CAF88] text-[#3B322C]">
+            ON
+          </button>
+        </div>
+
+        <!-- Rain & Birds Ambience Toggle -->
+        <div class="flex items-center justify-between gap-4 pb-3 border-b-2 border-dashed border-[#3B322C]/25">
+          <div>
+            <div class="text-xl doodle-font font-bold text-[#3B322C]">🌧️ Raindrops &amp; Bird Chirps</div>
+            <div class="text-xs text-[#6D523C]">Soft window rain &amp; distant tarapirohe calls</div>
+          </div>
+          <button id="toggle-ambience" onclick="toggleAudioSetting('ambience')" class="doodle-btn px-4 py-1.5 text-lg font-bold bg-[#9CAF88] text-[#3B322C]">
+            ON
+          </button>
+        </div>
+
+        <!-- Cute Button SFX Toggle -->
+        <div class="flex items-center justify-between gap-4 pb-3 border-b-2 border-dashed border-[#3B322C]/25">
+          <div>
+            <div class="text-xl doodle-font font-bold text-[#3B322C]">✨ Cute Button, Coin &amp; Serve SFX</div>
+            <div class="text-xs text-[#6D523C]">Gentle pops, coin clinks, chimes, and spoon bonks</div>
+          </div>
+          <button id="toggle-sfx" onclick="toggleAudioSetting('sfx')" class="doodle-btn px-4 py-1.5 text-lg font-bold bg-[#9CAF88] text-[#3B322C]">
+            ON
+          </button>
+        </div>
+
+        <!-- On-Screen Touch Controls Toggle -->
+        <div class="flex items-center justify-between gap-4 pb-3 border-b-2 border-dashed border-[#3B322C]/25">
+          <div>
+            <div class="text-xl doodle-font font-bold text-[#3B322C]">📱 Predator Touch Controls</div>
+            <div class="text-xs text-[#6D523C]">Show on-screen arrows during predator encounters</div>
+          </div>
+          <button id="toggle-touch" onclick="toggleTouchSetting()" class="doodle-btn px-4 py-1.5 text-lg font-bold bg-[#9CAF88] text-[#3B322C]">
+            AUTO
+          </button>
+        </div>
+
+        <!-- Reset Save Progress (2-step inline confirmation, no alert/confirm) -->
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <div class="text-xl doodle-font font-bold text-[#3B322C]">🗑️ Reset Diner Progress</div>
+            <div id="reset-status-text" class="text-xs text-[#6D523C]">Resets coins to 25 🪙, decor, and unlocked foods</div>
+          </div>
+          <button id="btn-reset-save" onclick="handleResetSave()" class="doodle-btn px-4 py-1.5 text-lg font-bold bg-[#E6B87D] hover:bg-[#DBA765] text-[#3B322C]">
+            Reset
+          </button>
+        </div>
+
+      </div>
+
+      <button onclick="showScreen('start')" class="doodle-btn bg-[#8C6D53] hover:bg-[#7A5E46] text-[#FAF5EE] text-xl sm:text-2xl font-bold py-2.5 px-8 mb-2">
+        ← Save &amp; Return
+      </button>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 3B. COZY SHOP SCREEN (DECOR & MENU EXPANSIONS)            -->
+    <!-- ========================================================= -->
+    <section id="screen-shop" class="hidden w-full h-full flex flex-col p-4 sm:p-6 overflow-hidden">
+      <!-- Shop Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 pr-40 sm:pr-48">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-bold text-[#3B322C]">🛍️ Tarapirohe Cozy Shop</h2>
+          <p class="text-xs sm:text-sm text-[#6D523C] font-semibold">Spend your tips on cafe decor &amp; new seasonal menu dishes!</p>
+        </div>
+      </div>
+
+      <!-- Shop Category Tabs -->
+      <div class="flex items-center gap-2.5 mb-3">
+        <button id="tab-shop-decor" onclick="switchShopTab('decor')" class="doodle-btn flex-1 sm:flex-none px-5 py-2 text-lg sm:text-xl font-bold bg-[#9CAF88] text-[#3B322C]">
+          🪴 Cafe Decor (5)
+        </button>
+        <button id="tab-shop-foods" onclick="switchShopTab('foods')" class="doodle-btn flex-1 sm:flex-none px-5 py-2 text-lg sm:text-xl font-bold bg-[#EFE6D8] text-[#3B322C]">
+          🍽️ Menu Expansions (4)
+        </button>
+      </div>
+
+      <!-- Shop Feedback Message Toast -->
+      <div id="shop-toast" class="hidden mb-2.5 px-4 py-1.5 rounded-xl border-2 border-[#3B322C] bg-[#DCE8D2] text-sm font-bold text-[#3B322C] text-center animate-pop">
+        Equipped!
+      </div>
+
+      <!-- Scrollable Shop Items Grid -->
+      <div id="shop-items-grid" class="flex-1 overflow-y-auto cozy-scroll pr-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 content-start">
+        <!-- Populated dynamically via renderShop() -->
+      </div>
+
+      <!-- Bottom Return Buttons -->
+      <div class="pt-3 flex items-center justify-center gap-3">
+        <button id="shop-back-btn" onclick="returnFromShop()" class="doodle-btn bg-[#8C6D53] hover:bg-[#7A5E46] text-[#FAF5EE] text-xl sm:text-2xl font-bold py-2.5 px-8">
+          ← Back to Diner
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 4. MAIN GAMEPLAY SCREEN (POV BEHIND COUNTER)              -->
+    <!-- ========================================================= -->
+    <section id="screen-game" class="hidden relative w-full h-full flex flex-col justify-between overflow-hidden">
+     
+      <!-- Top HUD Bar -->
+      <header class="relative z-30 flex flex-wrap items-center justify-between gap-2 px-3 sm:px-5 pt-2.5 pb-1.5 pr-40 sm:pr-48">
+        <!-- Season & Weather Badge (Tap to cycle seasons anytime!) -->
+        <button onclick="cycleSeasonManual()" title="Tap to switch season & see how the menu changes!"
+          class="doodle-btn bg-[#FAF5EE] hover:bg-[#EFE6D8] px-3 sm:px-4 py-1.5 flex items-center gap-2 text-left">
+          <span id="season-icon" class="text-xl sm:text-2xl">☀️</span>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span id="season-title" class="doodle-font text-lg sm:text-xl font-bold leading-none text-[#3B322C]">Spring Shift</span>
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#EFE6D8] border border-[#3B322C]/30 text-[#6D523C]">Switch ↻</span>
+            </div>
+            <div id="season-sub" class="text-[11px] sm:text-xs font-semibold text-[#6D523C]">Braided River &amp; Land</div>
+          </div>
+        </button>
+
+        <!-- Shift Progress & Quick Menu Button -->
+        <div class="flex items-center gap-2">
+          <button onclick="openMiniGuide()" class="doodle-btn bg-[#EFE6D8] px-2.5 py-1 text-sm sm:text-base font-bold text-[#3B322C]" title="Quick Menu Hint">
+            📖 Menu
+          </button>
+          <div class="doodle-card bg-[#FAF5EE] px-3 py-1.5 flex items-center gap-2">
+            <span class="text-xs sm:text-sm font-bold text-[#6D523C]">Shift <span id="hud-level">1</span>:</span>
+            <div id="hud-progress-dots" class="flex items-center gap-1">
+              <!-- Dots populated via JS -->
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Cafe Room & Window Scenery (Middle Arena) -->
+      <div id="cafe-arena" class="relative flex-1 w-full flex flex-col items-center justify-end overflow-hidden">
+       
+        <!-- Dynamic Cafe Background, Seasonal Window & Equipped Decor SVG -->
+        <svg id="cafe-bg-svg" class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 900 460" preserveAspectRatio="xMidYMid slice">
+          <!-- Warm Interior Wall -->
+          <rect width="900" height="460" fill="#F5EDE0" />
+         
+          <!-- Cafe Shelves on Left & Right -->
+          <g stroke="#3B322C" stroke-width="2.5">
+            <!-- Left shelf -->
+            <rect x="35" y="130" width="130" height="12" rx="4" fill="#B59272" />
+            <rect x="55" y="96" width="24" height="34" rx="5" fill="#9CAF88" />
+            <rect x="88" y="104" width="22" height="26" rx="4" fill="#C87D65" />
+            <circle cx="132" cy="116" r="14" fill="#EFE6D8" />
+            <!-- Right shelf -->
+            <rect x="735" y="130" width="130" height="12" rx="4" fill="#B59272" />
+            <path d="M 760 130 L 765 102 L 785 102 L 790 130 Z" fill="#7B9095" />
+            <circle cx="775" cy="94" r="9" fill="#9CAF88" />
+            <rect x="805" y="98" width="28" height="32" rx="5" fill="#E6B87D" />
+          </g>
+
+          <!-- DECOR 2: Fairy String Lights (Across Top Beam) -->
+          <g id="decor-fairy_lights" class="hidden">
+            <path d="M 0 12 Q 225 48 450 18 Q 675 48 900 12" fill="none" stroke="#3B322C" stroke-width="2.5" />
+            <circle cx="95" cy="27" r="6.5" fill="#FFE793" stroke="#3B322C" stroke-width="2" />
+            <circle cx="195" cy="34" r="6.5" fill="#F8C697" stroke="#3B322C" stroke-width="2" />
+            <circle cx="310" cy="27" r="6.5" fill="#FFE793" stroke="#3B322C" stroke-width="2" />
+            <circle cx="450" cy="18" r="6.5" fill="#F8C697" stroke="#3B322C" stroke-width="2" />
+            <circle cx="590" cy="27" r="6.5" fill="#FFE793" stroke="#3B322C" stroke-width="2" />
+            <circle cx="705" cy="34" r="6.5" fill="#F8C697" stroke="#3B322C" stroke-width="2" />
+            <circle cx="805" cy="27" r="6.5" fill="#FFE793" stroke="#3B322C" stroke-width="2" />
+          </g>
+
+          <!-- DECOR 3: Chalkboard Menu Sign (Left Wall beside Window) -->
+          <g id="decor-chalkboard" class="hidden" transform="translate(46, 175)">
+            <rect x="0" y="0" width="128" height="145" rx="10" fill="#B59272" stroke="#3B322C" stroke-width="3" />
+            <rect x="9" y="9" width="110" height="127" rx="6" fill="#3B3D3A" stroke="#3B322C" stroke-width="2" />
+            <text x="64" y="33" text-anchor="middle" fill="#F6E3BA" font-family="Patrick Hand, cursive" font-size="16" font-weight="bold">TODAY'S SPECIAL</text>
+            <line x1="22" y1="40" x2="106" y2="40" stroke="#FAF5EE" stroke-width="1.5" stroke-dasharray="3 3" />
+            <text id="chalkboard-season-line1" x="64" y="64" text-anchor="middle" fill="#FAF5EE" font-family="Patrick Hand, cursive" font-size="15">Fresh River</text>
+            <text id="chalkboard-season-line2" x="64" y="84" text-anchor="middle" fill="#9CAF88" font-family="Patrick Hand, cursive" font-size="15">&amp; Land Menu!</text>
+            <text x="64" y="116" text-anchor="middle" fill="#E6B87D" font-family="Patrick Hand, cursive" font-size="14">★ 100% Wild ★</text>
+          </g>
+
+          <!-- Large Panoramic Cafe Window (Center-Back) -->
+          <g transform="translate(215, 22)">
+            <!-- Sky / Outside Backdrop (Color dynamically updated by JS) -->
+            <rect id="win-sky" x="0" y="0" width="470" height="245" rx="20" fill="#D9ECEF" stroke="#3B322C" stroke-width="4" />
+           
+            <!-- SPRING / SUMMER SCENERY (Braided River & Sunny Hills) -->
+            <g id="scenery-spring">
+              <circle cx="395" cy="52" r="26" fill="#F6D57E" stroke="#3B322C" stroke-width="2.5" />
+              <!-- Distant Hills -->
+              <path d="M 4 155 Q 110 95 230 140 T 466 125 L 466 241 L 4 241 Z" fill="#A9C196" stroke="#3B322C" stroke-width="2.5" />
+              <!-- Braided River Channels -->
+              <path d="M 4 185 Q 140 165 250 190 T 466 175 L 466 241 L 4 241 Z" fill="#8EC1C9" stroke="#3B322C" stroke-width="2.5" />
+              <!-- Shingle / Gravel Islands in Braided River -->
+              <ellipse cx="145" cy="202" rx="58" ry="12" fill="#D8CEBE" stroke="#3B322C" stroke-width="2" />
+              <ellipse cx="330" cy="212" rx="68" ry="13" fill="#D8CEBE" stroke="#3B322C" stroke-width="2" />
+            </g>
+
+            <!-- AUTUMN / WINTER SCENERY (Calm Coastal Ocean & Waves) -->
+            <g id="scenery-winter" class="hidden">
+              <!-- Soft Winter Clouds -->
+              <path d="M 70 55 Q 85 38 105 48 Q 122 36 138 52 Q 148 64 130 68 L 72 68 Q 58 65 70 55 Z" fill="#FAF5EE" stroke="#3B322C" stroke-width="2" />
+              <path d="M 320 45 Q 335 30 355 40 Q 370 30 385 45 Q 392 56 375 60 L 322 60 Q 310 56 320 45 Z" fill="#FAF5EE" stroke="#3B322C" stroke-width="2" />
+              <!-- Calm Coastal Ocean -->
+              <rect x="4" y="135" width="462" height="106" fill="#6F94A3" stroke="#3B322C" stroke-width="2.5" />
+              <!-- Gentle Wave Doodles -->
+              <path d="M 45 162 Q 70 154 95 162 T 145 162" fill="none" stroke="#DCE8EC" stroke-width="2.5" stroke-linecap="round" />
+              <path d="M 270 175 Q 295 167 320 175 T 370 175" fill="none" stroke="#DCE8EC" stroke-width="2.5" stroke-linecap="round" />
+              <path d="M 130 205 Q 160 197 190 205 T 250 205" fill="none" stroke="#DCE8EC" stroke-width="2.5" stroke-linecap="round" />
+            </g>
+
+            <!-- STORMY WINTER SCENERY (Dark Clouds, Choppy Sea, Rain) -->
+            <g id="scenery-storm" class="hidden">
+              <!-- Storm Clouds -->
+              <path d="M 45 52 Q 70 25 105 40 Q 135 20 168 45 Q 185 62 158 68 L 48 68 Q 30 64 45 52 Z" fill="#6B757D" stroke="#3B322C" stroke-width="2.5" />
+              <path d="M 275 48 Q 305 22 340 38 Q 372 18 405 44 Q 422 60 392 66 L 280 66 Q 260 60 275 48 Z" fill="#6B757D" stroke="#3B322C" stroke-width="2.5" />
+              <!-- Choppy Stormy Waves -->
+              <path d="M 4 140 Q 45 120 85 142 T 165 142 T 245 142 T 325 142 T 405 142 T 466 142 L 466 241 L 4 241 Z" fill="#4C6875" stroke="#3B322C" stroke-width="2.5" />
+              <!-- Diagonal Rain Streaks -->
+              <g stroke="#CBD8DE" stroke-width="2.2" stroke-linecap="round">
+                <line class="rain-streak" x1="80" y1="75" x2="68" y2="105" />
+                <line class="rain-streak" style="animation-delay: 0.3s" x1="160" y1="80" x2="148" y2="110" />
+                <line class="rain-streak" style="animation-delay: 0.6s" x1="250" y1="70" x2="238" y2="100" />
+                <line class="rain-streak" style="animation-delay: 0.2s" x1="340" y1="78" x2="328" y2="108" />
+                <line class="rain-streak" style="animation-delay: 0.5s" x1="410" y1="72" x2="398" y2="102" />
+              </g>
+            </g>
+
+            <!-- Window Mullions (Wooden Frame Crossbars) -->
+            <line x1="156" y1="0" x2="156" y2="245" stroke="#3B322C" stroke-width="4" />
+            <line x1="313" y1="0" x2="313" y2="245" stroke="#3B322C" stroke-width="4" />
+            <line x1="0" y1="122" x2="470" y2="122" stroke="#3B322C" stroke-width="4" />
+            <rect x="-10" y="241" width="490" height="16" rx="6" fill="#B59272" stroke="#3B322C" stroke-width="3.5" />
+
+            <!-- DECOR 1: Potted Kōwhai & Silver Fern on Windowsill -->
+            <g id="decor-kowhai_fern" class="hidden" transform="translate(22, 185)">
+              <!-- Terracotta Pot -->
+              <path d="M 8 28 L 42 28 L 37 56 L 13 56 Z" fill="#C87D65" stroke="#3B322C" stroke-width="2.5" />
+              <!-- Silver Fern Fronds -->
+              <path d="M 22 28 Q 4 10 -4 16 Q 6 24 22 28" fill="#9CAF88" stroke="#3B322C" stroke-width="2" />
+              <path d="M 24 28 Q 10 -2 2 2 Q 12 14 24 28" fill="#7D966B" stroke="#3B322C" stroke-width="2" />
+              <!-- Kōwhai Branch & Golden Blossoms -->
+              <path d="M 27 28 Q 38 6 52 2" fill="none" stroke="#6D523C" stroke-width="2.5" stroke-linecap="round" />
+              <circle cx="44" cy="10" r="5" fill="#F4C44E" stroke="#3B322C" stroke-width="1.8" />
+              <circle cx="53" cy="5" r="4.5" fill="#F4C44E" stroke="#3B322C" stroke-width="1.8" />
+              <circle cx="38" cy="3" r="4.5" fill="#F4C44E" stroke="#3B322C" stroke-width="1.8" />
+            </g>
+          </g>
+
+          <!-- DECOR 4: Cozy Teapot & Muffin Stand (Right Corner of Cafe Counter) -->
+          <g id="decor-teapot_stand" class="hidden" transform="translate(725, 325)">
+            <!-- Tiered Pastry Stand -->
+            <line x1="95" y1="32" x2="95" y2="112" stroke="#3B322C" stroke-width="3" />
+            <ellipse cx="95" cy="112" rx="28" ry="6" fill="#EFE6D8" stroke="#3B322C" stroke-width="2.5" />
+            <ellipse cx="95" cy="78" rx="34" ry="7" fill="#FAF5EE" stroke="#3B322C" stroke-width="2.5" />
+            <ellipse cx="95" cy="46" rx="24" ry="6" fill="#FAF5EE" stroke="#3B322C" stroke-width="2.5" />
+            <!-- Cute Berry Muffins -->
+            <path d="M 74 75 L 77 65 L 89 65 L 92 75 Z" fill="#C87D65" stroke="#3B322C" stroke-width="2" />
+            <circle cx="83" cy="63" r="6" fill="#E6B87D" stroke="#3B322C" stroke-width="2" />
+            <path d="M 100 75 L 103 65 L 115 65 L 118 75 Z" fill="#C87D65" stroke="#3B322C" stroke-width="2" />
+            <circle cx="109" cy="63" r="6" fill="#E6B87D" stroke="#3B322C" stroke-width="2" />
+            <circle cx="95" cy="37" r="6" fill="#9CAF88" stroke="#3B322C" stroke-width="2" />
+            <!-- Steaming Ceramic Teapot -->
+            <ellipse cx="32" cy="94" rx="22" ry="18" fill="#8BB0B8" stroke="#3B322C" stroke-width="2.5" />
+            <path d="M 52 90 Q 65 80 62 72" fill="none" stroke="#8BB0B8" stroke-width="5" stroke-linecap="round" />
+            <path d="M 52 90 Q 65 80 62 72" fill="none" stroke="#3B322C" stroke-width="2.5" stroke-linecap="round" />
+            <path d="M 11 86 C -2 82, -2 104, 12 100" fill="none" stroke="#3B322C" stroke-width="2.5" stroke-linecap="round" />
+            <circle cx="32" cy="74" r="5" fill="#F6E3BA" stroke="#3B322C" stroke-width="2" />
+            <!-- Gentle Steam Curl -->
+            <path d="M 62 62 Q 58 54 64 46" fill="none" stroke="#FAF5EE" stroke-width="2.5" stroke-linecap="round" />
+          </g>
+
+          <!-- DECOR 5: Koru Welcome Rug & Plush Customer Perch Cushion -->
+          <g id="decor-koru_rug" class="hidden" transform="translate(320, 412)">
+            <ellipse cx="130" cy="28" rx="135" ry="18" fill="#8C6D53" stroke="#3B322C" stroke-width="3" />
+            <ellipse cx="130" cy="28" rx="118" ry="12" fill="#9CAF88" stroke="#3B322C" stroke-width="2" stroke-dasharray="6 4" />
+            <!-- Koru Spiral Doodle -->
+            <path d="M 95 28 C 95 21, 108 21, 108 28 C 108 32, 101 32, 101 28" fill="none" stroke="#FAF5EE" stroke-width="2.5" stroke-linecap="round" />
+            <path d="M 152 28 C 152 21, 165 21, 165 28 C 165 32, 158 32, 158 28" fill="none" stroke="#FAF5EE" stroke-width="2.5" stroke-linecap="round" />
+          </g>
+        </svg>
+
+        <!-- Customer / Predator Stage Area (Right behind the wooden counter) -->
+        <div id="stage-area" class="relative z-20 w-full max-w-3xl h-full flex flex-col items-center justify-end pb-2 sm:pb-3 px-4">
+         
+          <!-- Floating Coin Tip Pop-up Container -->
+          <div id="coin-popup-layer" class="pointer-events-none absolute inset-0 z-40 overflow-hidden"></div>
+
+          <!-- Feedback Toast / Reaction Bubble -->
+          <div id="feedback-banner" class="hidden absolute top-2 z-30 bg-[#FAF5EE] doodle-card px-4 py-1.5 text-center text-sm sm:text-base font-bold text-[#3B322C] animate-pop">
+            Yum! Thank you!
+          </div>
+
+          <!-- CUSTOMER VIEW (Normal Mode) -->
+          <div id="customer-container" class="w-full flex flex-col items-center justify-end transition-all duration-300">
+            <!-- Order Speech Bubble -->
+            <div id="order-bubble" class="relative bg-[#FAF5EE] doodle-box px-4 sm:px-6 py-2 sm:py-2.5 mb-1.5 max-w-md text-center animate-pop">
+              <div id="order-text" class="text-base sm:text-xl doodle-font font-bold text-[#3B322C] leading-snug">
+                "Cheep! Could I have a crunchy mayfly?"
+              </div>
+              <div id="order-hint" class="text-xs sm:text-sm font-semibold text-[#6D523C] mt-0.5">
+                Spring by the braided river!
+              </div>
+              <!-- Speech bubble pointer triangle -->
+              <div class="w-4 h-4 bg-[#FAF5EE] border-r-[3px] border-b-[3px] border-[#3B322C] rotate-45 mx-auto -mb-4 mt-1"></div>
+            </div>
+
+            <!-- Cute Customer Tarapirohe SVG -->
+            <div id="customer-bird" class="animate-hop">
+              <svg class="w-36 h-32 sm:w-44 sm:h-40 overflow-visible" viewBox="0 0 210 175">
+                <!-- Tail -->
+                <path d="M 142 115 L 188 98 L 174 118 L 190 128 L 142 130 Z" fill="#A5B1B5" stroke="#3B322C" stroke-width="3.2" stroke-linejoin="round" />
+                <!-- Body -->
+                <path d="M 55 100 C 50 145, 122 155, 152 122 C 164 108, 150 85, 122 85 C 94 85, 62 74, 55 100 Z" fill="#B6C0C4" stroke="#3B322C" stroke-width="3.5" />
+                <!-- Wing -->
+                <path d="M 85 100 C 108 92, 140 100, 150 114 C 128 125, 98 122, 85 100 Z" fill="#98A4A8" stroke="#3B322C" stroke-width="2.8" />
+                <!-- Cozy Winter Scarf (Shown only in Autumn/Winter/Storm) -->
+                <g id="bird-scarf" class="hidden">
+                  <path d="M 54 90 Q 74 102 95 88 L 98 100 Q 74 114 50 100 Z" fill="#C87D65" stroke="#3B322C" stroke-width="2.5" />
+                  <path d="M 82 98 L 88 126 L 76 128 L 72 102 Z" fill="#C87D65" stroke="#3B322C" stroke-width="2.5" />
+                </g>
+                <!-- Head -->
+                <circle cx="70" cy="72" r="28" fill="#B6C0C4" stroke="#3B322C" stroke-width="3.5" />
+                <!-- Black Cap -->
+                <path d="M 43 68 C 43 44, 92 40, 97 66 C 84 61, 58 61, 43 68 Z" fill="#2E2926" stroke="#3B322C" stroke-width="2.5" />
+                <!-- White Cheek Stripe -->
+                <path d="M 45 73 Q 68 68 92 74" fill="none" stroke="#FAF5EE" stroke-width="6" stroke-linecap="round" />
+                <!-- Orange-Red Bill -->
+                <path d="M 44 70 L 14 76 L 44 82 Z" fill="#E86A33" stroke="#3B322C" stroke-width="3" stroke-linejoin="round" />
+                <!-- Eye (changes expression on happy/confused) -->
+                <g id="bird-eye-normal">
+                  <circle cx="61" cy="64" r="4.5" fill="#1F1B18" />
+                  <circle cx="62.5" cy="62.5" r="1.5" fill="#FFFFFF" />
+                </g>
+                <g id="bird-eye-happy" class="hidden">
+                  <path d="M 55 65 Q 61 57 67 65" fill="none" stroke="#1F1B18" stroke-width="3.2" stroke-linecap="round" />
+                </g>
+                <!-- Blush -->
+                <ellipse cx="69" cy="79" rx="5.5" ry="3.2" fill="#E39B88" opacity="0.75" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- PREDATOR MINI-GAME VIEW (Rare Event) -->
+          <div id="predator-container" class="hidden w-full h-full flex flex-col justify-between items-center pt-1">
+            <!-- Predator Warning Banner -->
+            <div class="bg-[#C87D65] text-[#FAF5EE] doodle-box px-4 py-1.5 text-center shadow-md animate-pop">
+              <div class="doodle-font text-xl sm:text-2xl font-bold">⚠️ Sneaky Stoat Alert! ⚠️</div>
+              <div class="text-xs sm:text-sm font-semibold">Line up your wooden spoon &amp; press <strong>DOWN</strong> for a <strong>+15 🪙 Hero Tip</strong>!</div>
+            </div>
+
+            <!-- Horizontal Track along the Counter -->
+            <div class="relative w-full max-w-xl h-36 sm:h-40 flex items-end justify-center">
+             
+              <!-- Player's Wooden Spoon / Duster Marker -->
+              <div id="player-spoon" style="left: 50%;" class="absolute bottom-2 -translate-x-1/2 z-30 transition-all duration-100 flex flex-col items-center">
+                <div class="bg-[#FAF5EE] border-2 border-[#3B322C] rounded-full px-2 py-0.5 text-[11px] font-bold mb-1 shadow">YOU</div>
+                <!-- Wooden Spoon SVG -->
+                <svg id="spoon-svg" class="w-12 h-20 sm:w-14 sm:h-24 transition-transform duration-100" viewBox="0 0 60 100">
+                  <rect x="25" y="42" width="10" height="52" rx="5" fill="#D4B494" stroke="#3B322C" stroke-width="3" />
+                  <ellipse cx="30" cy="26" rx="16" ry="22" fill="#E3C6A8" stroke="#3B322C" stroke-width="3" />
+                  <ellipse cx="30" cy="26" rx="9" ry="14" fill="#CFAF8E" />
+                </svg>
+              </div>
+
+              <!-- Sneaky Stoat Doodle -->
+              <div id="predator-sprite" style="left: 25%;" class="absolute bottom-0 -translate-x-1/2 z-20 transition-all duration-150 animate-sneak">
+                <svg class="w-28 h-28 sm:w-32 sm:h-32" viewBox="0 0 140 130">
+                  <!-- Stoat Body peeking over counter -->
+                  <path d="M 35 125 C 35 75, 50 45, 70 45 C 90 45, 105 75, 105 125 Z" fill="#A67B5B" stroke="#3B322C" stroke-width="3.2" />
+                  <!-- Cream Belly -->
+                  <path d="M 52 125 C 52 88, 60 72, 70 72 C 80 72, 88 88, 88 125 Z" fill="#FAF5EE" />
+                  <!-- Ears -->
+                  <circle cx="48" cy="48" r="10" fill="#A67B5B" stroke="#3B322C" stroke-width="3" />
+                  <circle cx="92" cy="48" r="10" fill="#A67B5B" stroke="#3B322C" stroke-width="3" />
+                  <!-- Mischievous Eyes -->
+                  <circle cx="58" cy="62" r="4" fill="#1F1B18" />
+                  <circle cx="82" cy="62" r="4" fill="#1F1B18" />
+                  <path d="M 51 55 L 64 59 M 89 55 L 76 59" stroke="#3B322C" stroke-width="2.5" stroke-linecap="round" />
+                  <!-- Pink Nose & Whiskers -->
+                  <ellipse cx="70" cy="70" rx="5" ry="3.5" fill="#E39B88" stroke="#3B322C" stroke-width="2" />
+                  <path d="M 48 70 L 32 67 M 48 74 L 32 76 M 92 70 L 108 67 M 92 74 L 108 76" stroke="#3B322C" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Foreground Wooden Cafe Counter & Food Menu Tray -->
+      <div class="relative z-30 bg-[#9C7A5C] border-t-[4px] border-[#3B322C] px-2.5 sm:px-5 pt-2 pb-2.5 sm:pb-3.5 shadow-[0_-6px_18px_rgba(59,50,44,0.2)]">
+        <!-- Wooden Counter Edge Highlight -->
+        <div class="absolute top-0 left-0 right-0 h-2 bg-[#B89575]"></div>
+
+        <!-- Dynamic Seasonal Menu Header Banner -->
+        <div class="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-1 px-1 pb-1.5 text-xs sm:text-sm font-bold text-[#FAF5EE]">
+          <span id="tray-season-label" class="drop-shadow-[1px_1px_0px_#3B322C]">🌸 Spring Menu: River &amp; Land Dishes Active</span>
+          <span id="tray-season-diet-note" class="text-[11px] sm:text-xs bg-[#3B322C]/35 px-2.5 py-0.5 rounded-full">Out-of-season dishes are dimmed</span>
+        </div>
+
+        <!-- NORMAL MODE: Responsive Food Tray (Adapts dynamically to active season) -->
+        <div id="food-tray" class="max-w-4xl mx-auto grid grid-cols-4 sm:grid-cols-4 md:grid-cols-8 gap-1.5 sm:gap-2 pt-0.5 max-h-[146px] sm:max-h-none overflow-y-auto cozy-scroll">
+          <!-- Populated dynamically via JS for crisp SVG doodles -->
+        </div>
+
+        <!-- PREDATOR MODE: On-Screen Touch / Click Controls (Also responds to Arrow Keys) -->
+        <div id="predator-controls" class="hidden max-w-xl mx-auto flex items-center justify-center gap-3 sm:gap-5 py-1">
+          <button id="btn-move-left" onpointerdown="movePlayer(-1)" class="doodle-btn flex-1 bg-[#FAF5EE] hover:bg-[#EFE6D8] py-3 sm:py-4 text-2xl sm:text-3xl font-bold text-[#3B322C] flex items-center justify-center gap-1">
+            ⬅️ <span class="text-lg sm:text-xl">Left</span>
+          </button>
+          <button id="btn-bonk" onpointerdown="attemptShoo()" class="doodle-btn flex-[1.4] bg-[#C87D65] hover:bg-[#B86D55] py-3 sm:py-4 text-2xl sm:text-3xl font-bold text-[#FAF5EE] flex items-center justify-center gap-1.5">
+            🥄 <span>Shoo! (Down)</span>
+          </button>
+          <button id="btn-move-right" onpointerdown="movePlayer(1)" class="doodle-btn flex-1 bg-[#FAF5EE] hover:bg-[#EFE6D8] py-3 sm:py-4 text-2xl sm:text-3xl font-bold text-[#3B322C] flex items-center justify-center gap-1">
+            <span class="text-lg sm:text-xl">Right</span> ➡️
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick In-Game Mini Guide Modal -->
+      <div id="mini-guide-modal" class="hidden absolute inset-0 z-50 bg-[#3B322C]/50 backdrop-blur-[2px] flex items-center justify-center p-4">
+        <div class="bg-[#FAF5EE] doodle-box max-w-md w-full p-5 space-y-3 animate-pop">
+          <div class="flex items-center justify-between">
+            <h3 class="text-2xl sm:text-3xl font-bold text-[#3B322C]">Quick Menu Cheat Sheet</h3>
+            <button onclick="closeMiniGuide()" class="doodle-btn bg-[#EFE6D8] px-3 py-0.5 text-lg font-bold">✕</button>
+          </div>
+          <div class="space-y-2 text-sm text-[#3B322C]">
+            <div class="bg-[#EFE6D8] p-2.5 rounded-xl border border-[#3B322C]/30">
+              <strong class="text-[#566E42]">☀️ Spring &amp; Summer (River &amp; Land):</strong><br/>
+              Mayfly, Small Galaxiid Fish, Earthworm <span class="text-xs text-[#6D523C]">(+ Native Skink, Caddisfly Larva, Paddock Grub)</span>
+            </div>
+            <div class="bg-[#EFE6D8] p-2.5 rounded-xl border border-[#3B322C]/30">
+              <strong class="text-[#4B666E]">🌊 Autumn &amp; Calm Winter (Coastal Ocean):</strong><br/>
+              Ocean Krill <span class="text-xs text-[#6D523C]">(+ Marine Amphipod)</span>
+            </div>
+            <div class="bg-[#EFE6D8] p-2.5 rounded-xl border border-[#3B322C]/30">
+              <strong class="text-[#9E563F]">⛈️ Stormy Winter (Wet Paddocks):</strong><br/>
+              Earthworm <span class="text-xs text-[#6D523C]">(+ Paddock Grub when rough seas push them inland!)</span>
+            </div>
+          </div>
+          <button onclick="closeMiniGuide()" class="doodle-btn w-full bg-[#9CAF88] py-2 text-xl font-bold text-[#3B322C]">
+            Got it!
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 5. LEVEL UP / SHIFT SUMMARY SCREEN                        -->
+    <!-- ========================================================= -->
+    <section id="screen-levelup" class="hidden w-full h-full flex flex-col items-center justify-between p-4 sm:p-8 overflow-y-auto">
+      <div class="text-center mt-6 sm:mt-2 animate-pop">
+        <span class="px-3 py-1 rounded-full bg-[#9CAF88]/40 border-2 border-[#3B322C] text-xs sm:text-sm font-bold text-[#3B322C]">
+          Shift Complete!
+        </span>
+        <h2 class="text-4xl sm:text-5xl font-bold text-[#3B322C] mt-1">Cafe Leveled Up!</h2>
+      </div>
+
+      <!-- Star Rating, Itemized Coin Breakdown & Fun Fact Card -->
+      <div class="w-full max-w-xl bg-[#FAF5EE] doodle-box p-4 sm:p-6 text-center space-y-3.5 my-auto animate-pop">
+       
+        <!-- 1 to 5 Stars Display -->
+        <div>
+          <div class="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#6D523C] mb-1">Diner Service Rating</div>
+          <div id="star-rating-display" class="flex items-center justify-center gap-2 text-3xl sm:text-4xl">
+            <!-- Stars injected by JS -->
+          </div>
+          <div id="star-rating-label" class="text-base sm:text-lg doodle-font font-bold text-[#8C6D53] mt-0.5">
+            Cozy 5-Star Hospitality!
+          </div>
+        </div>
+
+        <!-- Itemized Coin Earnings Box -->
+        <div class="bg-[#F6E3BA]/65 doodle-card px-4 py-2.5 text-xs sm:text-sm font-bold text-[#3B322C] space-y-1">
+          <div class="flex justify-between">
+            <span>🍽️ Customer Orders &amp; Tips:</span>
+            <span id="summary-order-coins">+24 🪙</span>
+          </div>
+          <div class="flex justify-between">
+            <span>⭐ Star Rating Shift Bonus:</span>
+            <span id="summary-star-bonus">+25 🪙</span>
+          </div>
+          <div class="border-t border-dashed border-[#3B322C]/35 pt-1 flex justify-between text-sm sm:text-base text-[#6D523C]">
+            <span>Total Shift Earnings:</span>
+            <span id="summary-total-earned">+49 🪙</span>
+          </div>
+        </div>
+
+        <!-- Did You Know Fun Fact Box -->
+        <div class="bg-[#EFE6D8] doodle-card p-3.5 sm:p-4 text-left relative">
+          <div class="inline-block bg-[#C87D65] text-[#FAF5EE] text-xs font-bold px-2.5 py-0.5 rounded-full border border-[#3B322C] mb-1.5">
+            🐦 Tarapirohe Field Note
+          </div>
+          <p id="levelup-fact-text" class="text-xs sm:text-sm font-semibold text-[#3B322C] leading-relaxed">
+            Did you know they switch menus every season? In spring and summer, they eat river bugs, small fish, worms, and skinks—then in autumn and winter, they head out to sea to eat tiny ocean plankton.
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center gap-2.5 w-full max-w-xl mb-2">
+        <button onclick="nextShift()" class="doodle-btn w-full flex-1 bg-[#9CAF88] hover:bg-[#8FA47A] text-[#3B322C] text-xl sm:text-2xl font-bold py-3 px-5">
+          Next Season Shift →
+        </button>
+        <button onclick="openShop('decor', 'levelup')" class="doodle-btn w-full sm:w-auto bg-[#F6E3BA] hover:bg-[#EED5A0] text-[#3B322C] text-xl sm:text-2xl font-bold py-3 px-5 flex items-center justify-center gap-1.5">
+          <span>🛍️</span><span>Visit Shop</span>
+        </button>
+        <button onclick="showScreen('start')" class="doodle-btn w-full sm:w-auto bg-[#EFE6D8] hover:bg-[#E4D7C3] text-[#3B322C] text-lg sm:text-xl font-bold py-3 px-4">
+          Home
+        </button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- JAVASCRIPT: AUDIO, PERSISTENT ECONOMY, SHOP & GAME LOGIC  -->
+  <!-- ========================================================= -->
+  <script>
+    /* -----------------------------------------------------------
+       1. EDUCATIONAL DATA: 8 FOODS (4 STARTER + 4 SHOP UNLOCKS)
+       ----------------------------------------------------------- */
+    const FOODS = [
+      // --- 4 CORE STARTER FOODS ---
+      {
+        id: 'mayfly',
+        name: 'Mayfly',
+        sub: 'Braided River Bug',
+        seasons: ['spring', 'summer'],
+        starter: true,
+        price: 0,
+        desc: 'Delicate river insect caught on the wing over braided channels.',
+        svg: `<svg viewBox="0 0 64 64" class="w-10 h-10 sm:w-11 sm:h-11 mx-auto">
+                <ellipse cx="32" cy="36" rx="7" ry="14" fill="#8C6D53" stroke="#3B322C" stroke-width="2.5"/>
+                <circle cx="32" cy="20" r="5" fill="#6D523C" stroke="#3B322C" stroke-width="2.5"/>
+                <ellipse cx="20" cy="30" rx="10" ry="5" transform="rotate(-25 20 30)" fill="#DCE8EC" stroke="#3B322C" stroke-width="2"/>
+                <ellipse cx="44" cy="30" rx="10" ry="5" transform="rotate(25 44 30)" fill="#DCE8EC" stroke="#3B322C" stroke-width="2"/>
+                <path d="M29 16 L24 10 M35 16 L40 10 M29 50 L25 58 M35 50 L39 58" stroke="#3B322C" stroke-width="2" stroke-linecap="round"/>
+              </svg>`
+      },
+      {
+        id: 'galaxiid_fish',
+        name: 'Galaxiid Fish',
+        sub: 'Small River Fish',
+        seasons: ['spring', 'summer'],
+        starter: true,
+        price: 0,
+        desc: 'Silvery native freshwater fish scooped from shallow river riffles.',
+        svg: `<svg viewBox="0 0 64 64" class="w-10 h-10 sm:w-11 sm:h-11 mx-auto">
+                <path d="M12 32 Q28 16 46 32 Q28 48 12 32 Z" fill="#8BB0B8" stroke="#3B322C" stroke-width="2.5"/>
+                <path d="M45 32 L56 22 L53 32 L56 42 Z" fill="#7B9095" stroke="#3B322C" stroke-width="2.5" stroke-linejoin="round"/>
+                <circle cx="21" cy="30" r="2.5" fill="#3B322C"/>
+                <path d="M29 25 Q32 32 29 39" fill="none" stroke="#3B322C" stroke-width="2" stroke-linecap="round"/>
+              </svg>`
+      },
+      {
+        id: 'earthworm',
+        name: 'Earthworm',
+        sub: 'Soil & Wet Paddock',
+        seasons: ['spring', 'summer', 'storm'],
+        starter: true,
+        price: 0,
+        desc: 'Juicy earthworm found in damp riverbanks and stormy winter paddocks!',
+        svg: `<svg viewBox="0 0 64 64" class="w-10 h-10 sm:w-11 sm:h-11 mx-auto">
+                <path d="M14 42 C14 26, 28 26, 30 38 C32 48, 46 48, 48 30 C49 20, 54 18, 54 18" fill="none" stroke="#C87D65" stroke-width="7" stroke-linecap="round"/>
+                <path d="M14 42 C14 26, 28 26, 30 38 C32 48, 46 48, 48 30 C49 20, 54 18, 54 18" fill="none" stroke="#3B322C" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 6"/>
+                <circle cx="52" cy="19" r="1.5" fill="#3B322C"/>
+              </svg>`
+      },
+      {
+        id: 'ocean_krill',
+        name: 'Ocean Krill',
+        sub: 'Sea Plankton & Shrimp',
+        seasons: ['autumn', 'winter'],
+        starter: true,
+        price: 0,
+        desc: 'Tiny coastal plankton & crustaceans eaten at sea in autumn & winter.',
+        svg: `<svg viewBox="0 0 64 64" class="w-10 h-10 sm:w-11 sm:h-11 mx-auto">
+                <path d="M44 22 C28 18, 18 30, 24 44 C26 48, 32 48, 34 45" fill="none" stroke="#E08B6B" stroke-width="8" stroke-linecap="round"/>
+                <path d="M44 22 C28 18, 18 30, 24 44" fill="none" stroke="#3B322C" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M46 20 L54 15 M46 23 L55 24 M26 34 L33 36 M25 40 L32 42" stroke="#3B322C" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="43" cy="21" r="2" fill="#3B322C"/>
+              </svg>`
+      },
+
+      // --- 4 UNLOCKABLE SHOP MENU EXPANSIONS ---
+      {
+        id: 'native_skink',
+        name: 'Native Skink',
+        sub: 'Riverbank Lizard',
+        seasons: ['spring', 'summer'],
+        starter: false,
+        price: 25,
+        desc: 'Sun-warmed land lizard hunted near river shingle in Spring & Summer.',
+        svg: `<svg viewBox="0 0 64 64" class="w-10 h-10 sm:w-11 sm:h-11 mx-auto">
+                <path d="M16 44 Q26 26 42 22 Q50 20 52 15" fill="none" stroke="#9CAF88" stroke-width="7" stroke-linecap="round"/>
+                <path d="M16 44 Q26 26 42 22" fill="none" stroke="#3B322C" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M22 32 L16 28 M28 38 L34 43 M34 23 L29 18 M40 28 L45 33" stroke="#3B322C" stroke-width="2.2" stroke-linecap="round"/>
+                <circle cx="15" cy="43" r="1.8" fill="#3B322C"/>
+              </svg>`
+      },
+      {
+        id: 'caddisfly_larva',
+        name: 'Caddisfly Larva',
+        sub: 'Pebble-Case River Bug',
+        seasons: ['spring', 'summer'],
+        starter: false,
+        price: 40,
+        desc: 'Braided river bug tucked inside a tiny hand-built pebble shell!',
+        svg: `<svg viewBox="0 0 64 64" class="w-10 h-10 sm:w-11 sm:h-11 mx-auto">
+                <rect x="20" y="24" width="28" height="18" rx="8" fill="#B5A695" stroke="#3B322C" stroke-width="2.5"/>
+                <circle cx="28" cy="31" r="3.5" fill="#8C7B6B" stroke="#3B322C" stroke-width="1.5"/>
+                <circle cx="38" cy="35" r="3.5" fill="#D4C7B8" stroke="#3B322C" stroke-width="1.5"/>
+                <circle cx="17" cy="33" r="5" fill="#C87D65" stroke="#3B322C" stroke-width="2.2"/>
+                <path d="M13 30 L9 27 M13 36 L9 39" stroke="#3B322C" stroke-width="2" stroke-linecap="round"/>
+              </svg>`
+      },
+      {
+        id: 'marine_amphipod',
+        name: 'Marine Amphipod',
+        sub: 'Sea Crustacean',
+        seasons: ['autumn', 'winter'],
+        starter: false,
+        price: 55,
+        desc: 'Tiny translucent coastal crustacean for Autumn & Calm Winter ocean days.',
+        svg: `<svg viewBox="0 0 64 64" class="w-10 h-10 sm:w-11 sm:h-11 mx-auto">
+                <path d="M22 24 C36 18, 46 28, 40 42 C37 47, 30 47, 27 43" fill="none" stroke="#8EC1C9" stroke-width="8" stroke-linecap="round"/>
+                <path d="M22 24 C36 18, 46 28, 40 42" fill="none" stroke="#3B322C" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M20 22 L12 18 M20 26 L12 28 M34 32 L28 36 M36 38 L30 41" stroke="#3B322C" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="23" cy="23" r="2" fill="#3B322C"/>
+              </svg>`
+      },
+      {
+        id: 'paddock_grub',
+        name: 'Paddock Grub',
+        sub: 'Pasture Beetle Larva',
+        seasons: ['spring', 'summer', 'storm'],
+        starter: false,
+        price: 70,
+        desc: 'Plump pasture grub dug up in Spring, Summer & Stormy Winter paddocks!',
+        svg: `<svg viewBox="0 0 64 64" class="w-10 h-10 sm:w-11 sm:h-11 mx-auto">
+                <path d="M24 22 C16 30, 18 44, 32 46 C42 47, 46 40, 44 34" fill="none" stroke="#F4E3B2" stroke-width="11" stroke-linecap="round"/>
+                <path d="M24 22 C16 30, 18 44, 32 46 C42 47, 46 40, 44 34" fill="none" stroke="#3B322C" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="25" cy="20" r="5" fill="#C87D65" stroke="#3B322C" stroke-width="2.2"/>
+                <path d="M22 32 L27 32 M23 39 L28 38 M34 42 L35 37" stroke="#3B322C" stroke-width="2" stroke-linecap="round"/>
+              </svg>`
+      }
+    ];
+
+    /* -----------------------------------------------------------
+       1B. COZY CAFE DECOR ITEMS FOR THE SHOP
+       ----------------------------------------------------------- */
+    const DECOR_ITEMS = [
+      {
+        id: 'kowhai_fern',
+        name: 'Potted Kōwhai & Fern',
+        price: 20,
+        desc: 'Adds native NZ golden kōwhai blossoms & silver fern fronds on the cafe windowsill.',
+        svg: `<svg viewBox="0 0 64 64" class="w-14 h-14 mx-auto">
+                <path d="M20 36 L44 36 L40 56 L24 56 Z" fill="#C87D65" stroke="#3B322C" stroke-width="2.5"/>
+                <path d="M30 36 Q16 22 10 26 Q18 32 30 36" fill="#9CAF88" stroke="#3B322C" stroke-width="2"/>
+                <path d="M34 36 Q42 18 52 14" fill="none" stroke="#6D523C" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="46" cy="20" r="5" fill="#F4C44E" stroke="#3B322C" stroke-width="2"/>
+                <circle cx="53" cy="14" r="4.5" fill="#F4C44E" stroke="#3B322C" stroke-width="2"/>
+                <circle cx="41" cy="13" r="4.5" fill="#F4C44E" stroke="#3B322C" stroke-width="2"/>
+              </svg>`
+      },
+      {
+        id: 'fairy_lights',
+        name: 'Fairy String Lights',
+        price: 35,
+        desc: 'Hangs warm glowing hand-drawn string lights across the top wooden cafe beam.',
+        svg: `<svg viewBox="0 0 64 64" class="w-14 h-14 mx-auto">
+                <path d="M6 22 Q32 42 58 22" fill="none" stroke="#3B322C" stroke-width="2.5"/>
+                <circle cx="16" cy="28" r="5.5" fill="#FFE793" stroke="#3B322C" stroke-width="2"/>
+                <circle cx="32" cy="33" r="5.5" fill="#F8C697" stroke="#3B322C" stroke-width="2"/>
+                <circle cx="48" cy="28" r="5.5" fill="#FFE793" stroke="#3B322C" stroke-width="2"/>
+              </svg>`
+      },
+      {
+        id: 'chalkboard',
+        name: 'Chalkboard Menu Sign',
+        price: 50,
+        desc: 'Places a wooden chalkboard beside the window showing today’s seasonal special.',
+        svg: `<svg viewBox="0 0 64 64" class="w-14 h-14 mx-auto">
+                <rect x="14" y="10" width="36" height="44" rx="5" fill="#B59272" stroke="#3B322C" stroke-width="2.5"/>
+                <rect x="18" y="14" width="28" height="36" rx="3" fill="#3B3D3A" stroke="#3B322C" stroke-width="1.5"/>
+                <line x1="23" y1="24" x2="41" y2="24" stroke="#F6E3BA" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="23" y1="32" x2="38" y2="32" stroke="#9CAF88" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="23" y1="40" x2="35" y2="40" stroke="#FAF5EE" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>`
+      },
+      {
+        id: 'teapot_stand',
+        name: 'Teapot & Muffin Stand',
+        price: 75,
+        desc: 'Adds a steaming ceramic teapot and tiered pastry stand on the counter corner.',
+        svg: `<svg viewBox="0 0 64 64" class="w-14 h-14 mx-auto">
+                <ellipse cx="26" cy="40" rx="15" ry="12" fill="#8BB0B8" stroke="#3B322C" stroke-width="2.5"/>
+                <path d="M40 37 Q50 30 48 24" fill="none" stroke="#3B322C" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M12 35 C4 32, 4 46, 13 44" fill="none" stroke="#3B322C" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="26" cy="26" r="4" fill="#F6E3BA" stroke="#3B322C" stroke-width="2"/>
+                <path d="M47 18 Q44 13 48 9" fill="none" stroke="#8C6D53" stroke-width="2" stroke-linecap="round"/>
+              </svg>`
+      },
+      {
+        id: 'koru_rug',
+        name: 'Koru Welcome Rug',
+        price: 100,
+        desc: 'Places a woven kōwhaiwhai/koru pattern mat & plush customer perch at the counter.',
+        svg: `<svg viewBox="0 0 64 64" class="w-14 h-14 mx-auto">
+                <ellipse cx="32" cy="34" rx="26" ry="14" fill="#8C6D53" stroke="#3B322C" stroke-width="2.5"/>
+                <ellipse cx="32" cy="34" rx="20" ry="9" fill="#9CAF88" stroke="#3B322C" stroke-width="1.8"/>
+                <path d="M24 34 C24 29, 31 29, 31 34 C31 37, 27 37, 27 34" fill="none" stroke="#FAF5EE" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M35 34 C35 29, 42 29, 42 34 C42 37, 38 37, 38 34" fill="none" stroke="#FAF5EE" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>`
+      }
+    ];
+
+    /* -----------------------------------------------------------
+       1C. SEASONS & DYNAMIC ORDER TEMPLATES
+       ----------------------------------------------------------- */
+    const ORDER_DIALOGUES = {
+      mayfly: [
+        { text: '"Cheep! I\'ve been gliding over the braided river—any crunchy mayflies?"', hint: 'Spring/Summer menu: Braided river & land critters!' },
+        { text: '"A freshly hatched mayfly from the river channel would be delicious!"', hint: 'Mayflies are a favorite river bug!' }
+      ],
+      galaxiid_fish: [
+        { text: '"I\'m nesting on the river shingle! A small galaxiid fish would be lovely."', hint: 'Spring/Summer menu: Small freshwater fish!' },
+        { text: '"Diving into clear river riffles—one small galaxiid fish, please!"', hint: 'Freshwater fish are on the river menu!' }
+      ],
+      earthworm: [
+        { text: '"The riverbank soil is damp today—do you have a fresh earthworm?"', hint: 'Earthworms are on the Spring/Summer land menu!' },
+        { text: '"After morning dew on the grass, an earthworm hits the spot!"', hint: 'Serve an earthworm from the land menu!' }
+      ],
+      storm_earthworm: [
+        { text: '"Whoa, the ocean is way too stormy! I flew inland to wet paddocks for an earthworm!"', hint: 'Stormy winter weather puts earthworms back on the menu!' },
+        { text: '"Rough waves at the coast today! A juicy earthworm from the wet paddock, please!"', hint: 'When storms hit the coast, tarapirohe fly inland for worms.' }
+      ],
+      ocean_krill: [
+        { text: '"Brr, coastal breeze! I\'ve flown out to sea—got any ocean krill?"', hint: 'Autumn & Calm Winter menu: Coastal ocean food!' },
+        { text: '"Riding the ocean swells! Could I have some tasty ocean krill?"', hint: 'In autumn/winter, tarapirohe eat coastal plankton & krill.' }
+      ],
+      native_skink: [
+        { text: '"Spotted one warming on a sunny river stone—may I order a native skink?"', hint: 'Spring & Summer include native land skinks!' },
+        { text: '"Cheep! A tasty native skink from the sunny riverbanks, please!"', hint: 'Land lizards are part of their summer diet!' }
+      ],
+      caddisfly_larva: [
+        { text: '"Ooh, you unlocked caddisfly larva! Those pebble-case river bugs are my favorite!"', hint: 'Spring/Summer braided river specialty!' },
+        { text: '"Nothing beats a crunchy caddisfly larva from the braided river!"', hint: 'Serve caddisfly larva from the river menu!' }
+      ],
+      marine_amphipod: [
+        { text: '"Gliding over crisp coastal waters—a marine amphipod, please!"', hint: 'Autumn & Calm Winter coastal crustacean!' },
+        { text: '"Cheep! Marine amphipods from the sea keep me energized all winter!"', hint: 'Serve marine amphipod!' }
+      ],
+      paddock_grub: [
+        { text: '"Digging in the pasture soil—could I have a plump paddock grub?"', hint: 'Pasture beetle larvae are loved in Spring, Summer & Winter Storms!' },
+        { text: '"Cheep! A juicy paddock grub from the wet farmland, please!"', hint: 'Serve paddock grub!' }
+      ],
+      storm_paddock_grub: [
+        { text: '"Too stormy at sea! Good thing you have paddock grubs from the wet paddocks!"', hint: 'Stormy coastal weather sends tarapirohe to inland paddocks!' }
+      ]
+    };
+
+    const SEASONS = [
+      {
+        id: 'spring',
+        title: 'Spring Shift',
+        subtitle: 'Braided River & Land',
+        chalk1: 'Fresh River',
+        chalk2: '& Land Menu!',
+        icon: '🌸',
+        skyColor: '#DCEEF2',
+        scenery: 'spring',
+        scarf: false
+      },
+      {
+        id: 'autumn',
+        title: 'Autumn Shift',
+        subtitle: 'Heading to the Coast',
+        chalk1: 'Coastal Ocean',
+        chalk2: 'Plankton & Krill!',
+        icon: '🍂',
+        skyColor: '#D4E2E8',
+        scenery: 'winter',
+        scarf: true
+      },
+      {
+        id: 'storm',
+        title: 'Winter Storm Shift!',
+        subtitle: 'Rough Seas → Wet Paddocks',
+        chalk1: 'Storm Special:',
+        chalk2: 'Wet Paddock Worms!',
+        icon: '⛈️',
+        skyColor: '#98A8B2',
+        scenery: 'storm',
+        scarf: true
+      },
+      {
+        id: 'summer',
+        title: 'Summer Shift',
+        subtitle: 'Sunny Braided Rivers',
+        chalk1: 'Sunny River',
+        chalk2: '& Bank Critters!',
+        icon: '☀️',
+        skyColor: '#D9F0F5',
+        scenery: 'spring',
+        scarf: false
+      },
+      {
+        id: 'winter',
+        title: 'Calm Winter Shift',
+        subtitle: 'Coastal Ocean Feeding',
+        chalk1: 'Calm Winter',
+        chalk2: 'Sea Crustaceans!',
+        icon: '❄️',
+        skyColor: '#CFE0E8',
+        scenery: 'winter',
+        scarf: true
+      }
+    ];
+
+    const FUN_FACTS = [
+      "Did you know they switch menus every season? In spring and summer, they eat river bugs, small fish, worms, and skinks—then in autumn and winter, they head out to sea to eat tiny ocean plankton.",
+      "Did you know they eat food from rivers, land, and the ocean? Most terns only eat seafood, but the tarapirohe’s diet covers freshwater fish and insects, land worms and lizards, and sea crustaceans.",
+      "Did you know stormy sea weather puts worms back on their menu? When rough weather hits the coast in winter, tarapirohe fly inland to wet paddocks to eat earthworms until the sea calms down."
+    ];
+
+    /* -----------------------------------------------------------
+       2. PROCEDURAL COZY WEB AUDIO ENGINE (Lo-Fi + Rain + Coin SFX)
+       ----------------------------------------------------------- */
+    const AudioEngine = {
+      ctx: null,
+      initialized: false,
+      muted: false,
+      settings: {
+        music: true,
+        ambience: true,
+        sfx: true
+      },
+      musicTimer: null,
+      birdTimer: null,
+      rainNode: null,
+      rainGain: null,
+      chordIndex: 0,
+
+      init() {
+        if (this.initialized) {
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
+          }
+          return;
+        }
+        try {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioCtx();
+          this.initialized = true;
+          this.startRainAmbience();
+          this.startLofiLoop();
+          this.startBirdChirps();
+        } catch (e) {
+          console.warn('Web Audio not supported:', e);
+        }
+      },
+
+      // Soft warm pink/brown noise filtered to sound like cozy raindrops on glass
+      startRainAmbience() {
+        if (!this.ctx) return;
+        const bufferSize = this.ctx.sampleRate * 3;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let lastOut = 0.0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          data[i] = (lastOut + (0.04 * white)) / 1.04;
+          lastOut = data[i];
+          // Occasional tiny raindrop plink
+          if (Math.random() < 0.0008) {
+            data[i] += (Math.random() - 0.5) * 0.35;
+          }
+        }
+
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = buffer;
+        noise.loop = true;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 950;
+        filter.Q.value = 0.7;
+
+        const gain = this.ctx.createGain();
+        gain.gain.value = (this.settings.ambience && !this.muted) ? 0.08 : 0;
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.ctx.destination);
+        noise.start();
+
+        this.rainNode = noise;
+        this.rainGain = gain;
+      },
+
+      // Calm Lo-Fi Rhodes-style jazz chords (Fmaj7 -> Em7 -> Dm7 -> Cmaj7)
+      startLofiLoop() {
+        const chords = [
+          [174.61, 220.00, 261.63, 329.63], // Fmaj7
+          [164.81, 196.00, 246.94, 293.66], // Em7
+          [146.83, 174.61, 220.00, 261.63], // Dm7
+          [130.81, 164.81, 196.00, 246.94]  // Cmaj7
+        ];
+
+        const playNextChord = () => {
+          if (this.ctx && this.settings.music && !this.muted && this.ctx.state === 'running') {
+            const now = this.ctx.currentTime;
+            const freqs = chords[this.chordIndex % chords.length];
+            this.chordIndex++;
+
+            freqs.forEach((f, idx) => {
+              const osc = this.ctx.createOscillator();
+              const gain = this.ctx.createGain();
+              const filter = this.ctx.createBiquadFilter();
+
+              osc.type = 'triangle';
+              // Slight warm detune
+              osc.frequency.setValueAtTime(f + (idx % 2 === 0 ? 0.4 : -0.4), now + idx * 0.04);
+
+              filter.type = 'lowpass';
+              filter.frequency.setValueAtTime(750, now);
+
+              gain.gain.setValueAtTime(0.0001, now + idx * 0.04);
+              gain.gain.linearRampToValueAtTime(0.028, now + idx * 0.04 + 0.25);
+              gain.gain.exponentialRampToValueAtTime(0.0008, now + 3.2);
+
+              osc.connect(filter);
+              filter.connect(gain);
+              gain.connect(this.ctx.destination);
+
+              osc.start(now + idx * 0.04);
+              osc.stop(now + 3.4);
+            });
+          }
+          this.musicTimer = setTimeout(playNextChord, 3400);
+        };
+
+        playNextChord();
+      },
+
+      // Gentle occasional distant bird chirping
+      startBirdChirps() {
+        const scheduleChirp = () => {
+          if (this.ctx && this.settings.ambience && !this.muted && this.ctx.state === 'running') {
+            this.playSoftChirp();
+          }
+          const nextDelay = 4500 + Math.random() * 6500;
+          this.birdTimer = setTimeout(scheduleChirp, nextDelay);
+        };
+        this.birdTimer = setTimeout(scheduleChirp, 2500);
+      },
+
+      playSoftChirp() {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const notes = Math.random() > 0.5 ? [1450, 1750] : [1600, 1380, 1680];
+        notes.forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          const t = now + i * 0.14;
+          osc.frequency.setValueAtTime(freq, t);
+          osc.frequency.exponentialRampToValueAtTime(freq * 1.15, t + 0.09);
+
+          gain.gain.setValueAtTime(0.0001, t);
+          gain.gain.linearRampToValueAtTime(0.022, t + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.11);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.12);
+        });
+      },
+
+      // Cute UI Pop Sound on Every Button Click
+      playClick() {
+        this.init();
+        if (!this.ctx || !this.settings.sfx || this.muted) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(780, now + 0.075);
+
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.09);
+      },
+
+      // Happy Serve Chime + Bird Chirp
+      playServeSuccess() {
+        this.init();
+        if (!this.ctx || !this.settings.sfx || this.muted) return;
+        const now = this.ctx.currentTime;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          const t = now + i * 0.065;
+          osc.frequency.setValueAtTime(freq, t);
+          gain.gain.setValueAtTime(0.07, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.26);
+        });
+      },
+
+      // Gentle Wrong Food Boop
+      playWrong() {
+        this.init();
+        if (!this.ctx || !this.settings.sfx || this.muted) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(240, now);
+        osc.frequency.linearRampToValueAtTime(185, now + 0.18);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.22);
+      },
+
+      // Predator Alert Sound
+      playAlert() {
+        this.init();
+        if (!this.ctx || !this.settings.sfx || this.muted) return;
+        const now = this.ctx.currentTime;
+        [440, 370, 440].forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'square';
+          const t = now + i * 0.11;
+          osc.frequency.setValueAtTime(freq, t);
+          gain.gain.setValueAtTime(0.035, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.1);
+        });
+      },
+
+      // Wooden Spoon Shoo / Bonk Sound
+      playBonk() {
+        this.init();
+        if (!this.ctx || !this.settings.sfx || this.muted) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(320, now);
+        osc.frequency.exponentialRampToValueAtTime(110, now + 0.14);
+        gain.gain.setValueAtTime(0.14, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.17);
+      },
+
+      // Crisp, Cute Cash-Register / Coin Clink Sound
+      playCoin() {
+        this.init();
+        if (!this.ctx || !this.settings.sfx || this.muted) return;
+        const now = this.ctx.currentTime;
+        // Two bright metallic bell harmonics (B5 -> E6)
+        [987.77, 1318.51].forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          const t = now + idx * 0.075;
+          osc.frequency.setValueAtTime(freq, t);
+
+          gain.gain.setValueAtTime(0.0001, t);
+          gain.gain.linearRampToValueAtTime(0.09, t + 0.012);
+          gain.gain.exponentialRampToValueAtTime(0.0008, t + 0.28);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.3);
+        });
+      },
+
+      // Level Up Fanfare
+      playLevelUp() {
+        this.init();
+        if (!this.ctx || !this.settings.sfx || this.muted) return;
+        const now = this.ctx.currentTime;
+        [440, 554.37, 659.25, 880].forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          const t = now + i * 0.1;
+          osc.frequency.setValueAtTime(freq, t);
+          gain.gain.setValueAtTime(0.08, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.42);
+        });
+      },
+
+      updateVolumes() {
+        if (this.rainGain && this.ctx) {
+          this.rainGain.gain.setTargetAtTime(
+            (this.settings.ambience && !this.muted) ? 0.08 : 0,
+            this.ctx.currentTime,
+            0.1
+          );
+        }
+      }
+    };
+
+    /* -----------------------------------------------------------
+       3. GAME STATE, PERSISTENT LOCALSTORAGE & NAVIGATION
+       ----------------------------------------------------------- */
+    const SAVE_KEY = 'tarapirohe_diner_save_v1';
+
+    const state = {
+      screen: 'start',
+      previousScreen: 'start',
+      shopTab: 'decor',
+      // Persistent economy & unlocks
+      coins: 25,
+      unlockedFoods: ['mayfly', 'galaxiid_fish', 'earthworm', 'ocean_krill'],
+      ownedDecor: [],
+      equippedDecor: [],
+      // Shift state
+      level: 1,
+      seasonIndex: 0,
+      customersServed: 0,
+      customersPerShift: 4,
+      mistakesThisShift: 0,
+      streak: 0,
+      orderStartTime: 0,
+      shiftOrderCoinsEarned: 0,
+      currentOrder: null,
+      isBusy: false,
+      // Predator mini-game state
+      predatorActive: false,
+      predatorSpawnedThisShift: false,
+      playerPos: 50,
+      predatorPos: 25,
+      predatorDir: 1,
+      predatorInterval: null,
+      touchControlMode: 'auto',
+      resetConfirmPending: false
+    };
+
+    function loadSaveData() {
+      try {
+        const raw = localStorage.getItem(SAVE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (typeof parsed.coins === 'number') state.coins = parsed.coins;
+          if (Array.isArray(parsed.unlockedFoods) && parsed.unlockedFoods.length >= 4) {
+            state.unlockedFoods = parsed.unlockedFoods;
+          }
+          if (Array.isArray(parsed.ownedDecor)) state.ownedDecor = parsed.ownedDecor;
+          if (Array.isArray(parsed.equippedDecor)) state.equippedDecor = parsed.equippedDecor;
+          if (typeof parsed.level === 'number' && parsed.level >= 1) state.level = parsed.level;
+          if (typeof parsed.seasonIndex === 'number' && parsed.seasonIndex >= 0) state.seasonIndex = parsed.seasonIndex;
+        }
+      } catch (e) {
+        console.warn('Could not load save data:', e);
+      }
+      syncCoinDisplays();
+      applyDecorVisuals();
+    }
+
+    function saveGameData() {
+      try {
+        localStorage.setItem(SAVE_KEY, JSON.stringify({
+          coins: state.coins,
+          unlockedFoods: state.unlockedFoods,
+          ownedDecor: state.ownedDecor,
+          equippedDecor: state.equippedDecor,
+          level: state.level,
+          seasonIndex: state.seasonIndex
+        }));
+      } catch (e) {
+        console.warn('Could not save data:', e);
+      }
+    }
+    function spawnCoinPopup(text, isPenalty = false) {
+      const layer = document.getElementById('coin-popup-layer');
+      if (!layer) return;
+      const badge = document.createElement('div');
+      const styleClasses = isPenalty
+        ? 'bg-[#F6D5C8] text-[#8E3524] animate-coin-loss'
+        : 'bg-[#F6E3BA] text-[#3B322C] animate-coin-float';
+      badge.className = `absolute left-1/2 bottom-16 border-2 border-[#3B322C] rounded-full px-3.5 py-1 text-base sm:text-lg doodle-font font-bold shadow-[2px_3px_0px_#3B322C] whitespace-nowrap ${styleClasses}`;
+      badge.textContent = text;
+      layer.appendChild(badge);
+      setTimeout(() => badge.remove(), 1300);
+    }
+
+    function deductCoins(amount) {
+      const actualLoss = Math.min(state.coins, amount);
+      if (actualLoss > 0) {
+        state.coins -= actualLoss;
+        state.shiftOrderCoinsEarned -= actualLoss;
+        syncCoinDisplays();
+        saveGameData();
+        spawnCoinPopup(`-${actualLoss} 🪙`, true);
+      } else {
+        spawnCoinPopup(`0 🪙`, true);
+      }
+      return actualLoss;
+    }
+
+    function showScreen(screenName) {
+      AudioEngine.playClick();
+      if (screenName !== 'shop') {
+        state.previousScreen = screenName;
+      }
+      state.screen = screenName;
+      ['start', 'guide', 'settings', 'shop', 'game', 'levelup'].forEach(s => {
+        document.getElementById(`screen-${s}`).classList.add('hidden');
+      });
+      if (screenName === 'guide') {
+        renderDietGuide();
+      }
+      if (screenName === 'start') {
+        applyDecorVisuals();
+      }
+      document.getElementById(`screen-${screenName}`).classList.remove('hidden');
+    }
+
+    function openShop(tab = 'decor', returnTarget = null) {
+      if (returnTarget) {
+        state.previousScreen = returnTarget;
+      } else if (state.screen !== 'shop') {
+        state.previousScreen = state.screen;
+      }
+      state.shopTab = tab;
+      renderShop();
+      showScreen('shop');
+    }
+
+    function openShopFromAnywhere() {
+      if (state.screen === 'shop') {
+        returnFromShop();
+      } else {
+        openShop('decor', state.screen);
+      }
+    }
+
+    function returnFromShop() {
+      const target = state.previousScreen && state.previousScreen !== 'shop' ? state.previousScreen : 'start';
+      if (target === 'game') {
+        renderFoodTray();
+        applyDecorVisuals();
+      }
+      showScreen(target);
+    }
+
+    function syncCoinDisplays() {
+      document.querySelectorAll('.global-coin-count').forEach(el => {
+        el.textContent = state.coins;
+      });
+    }
+
+    function awardCoins(amount, customPopupText = null) {
+      if (amount <= 0) return;
+      state.coins += amount;
+      syncCoinDisplays();
+      saveGameData();
+      AudioEngine.playCoin();
+      spawnCoinPopup(customPopupText || `+${amount} 🪙`, false);
+    }
+
+    /* -----------------------------------------------------------
+       4. SHOP, DECOR & DIET GUIDE RENDERERS
+       ----------------------------------------------------------- */
+    function switchShopTab(tab) {
+      AudioEngine.playClick();
+      state.shopTab = tab;
+      renderShop();
+    }
+
+    function showShopToast(msg, bg = '#DCE8D2') {
+      const toast = document.getElementById('shop-toast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.style.backgroundColor = bg;
+      toast.classList.remove('hidden');
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 2200);
+    }
+
+    function renderShop() {
+      const decorTab = document.getElementById('tab-shop-decor');
+      const foodsTab = document.getElementById('tab-shop-foods');
+      const grid = document.getElementById('shop-items-grid');
+      if (!grid) return;
+
+      if (state.shopTab === 'decor') {
+        decorTab.className = 'doodle-btn flex-1 sm:flex-none px-5 py-2 text-lg sm:text-xl font-bold bg-[#9CAF88] text-[#3B322C]';
+        foodsTab.className = 'doodle-btn flex-1 sm:flex-none px-5 py-2 text-lg sm:text-xl font-bold bg-[#EFE6D8] text-[#3B322C]';
+
+        grid.innerHTML = DECOR_ITEMS.map(item => {
+          const owned = state.ownedDecor.includes(item.id);
+          const equipped = state.equippedDecor.includes(item.id);
+          const canAfford = state.coins >= item.price;
+
+          let actionBtn = '';
+          if (equipped) {
+            actionBtn = `<button onclick="toggleEquipDecor('${item.id}')" class="doodle-btn w-full py-1.5 text-base font-bold bg-[#9CAF88] text-[#3B322C]">✓ Equipped (Tap to Hide)</button>`;
+          } else if (owned) {
+            actionBtn = `<button onclick="toggleEquipDecor('${item.id}')" class="doodle-btn w-full py-1.5 text-base font-bold bg-[#EFE6D8] hover:bg-[#E4D7C3] text-[#3B322C]">Equip in Cafe</button>`;
+          } else {
+            actionBtn = `<button onclick="buyDecor('${item.id}')" class="doodle-btn w-full py-1.5 text-base font-bold ${canAfford ? 'bg-[#F6E3BA] hover:bg-[#EED5A0] text-[#3B322C]' : 'bg-[#E5DFD5] text-[#8C7F73] opacity-80'}">Buy • ${item.price} 🪙</button>`;
+          }
+
+          return `
+            <div class="bg-[#FAF5EE] doodle-card p-3.5 flex flex-col justify-between gap-2">
+              <div>
+                <div class="bg-[#EFE6D8] rounded-xl p-2 border border-[#3B322C]/20 mb-2">${item.svg}</div>
+                <div class="doodle-font text-xl font-bold text-[#3B322C]">${item.name}</div>
+                <p class="text-xs text-[#6D523C] font-semibold mt-0.5">${item.desc}</p>
+              </div>
+              ${actionBtn}
+            </div>
+          `;
+        }).join('');
+      } else {
+        decorTab.className = 'doodle-btn flex-1 sm:flex-none px-5 py-2 text-lg sm:text-xl font-bold bg-[#EFE6D8] text-[#3B322C]';
+        foodsTab.className = 'doodle-btn flex-1 sm:flex-none px-5 py-2 text-lg sm:text-xl font-bold bg-[#9CAF88] text-[#3B322C]';
+
+        const unlockableFoods = FOODS.filter(f => !f.starter);
+        grid.innerHTML = unlockableFoods.map(food => {
+          const unlocked = state.unlockedFoods.includes(food.id);
+          const canAfford = state.coins >= food.price;
+          const seasonBadges = food.seasons.map(s => {
+            if (s === 'spring') return '🌸 Spring';
+            if (s === 'summer') return '☀️ Summer';
+            if (s === 'autumn') return '🍂 Autumn';
+            if (s === 'winter') return '❄️ Winter';
+            if (s === 'storm') return '⛈️ Storm';
+            return s;
+          }).join(' • ');
+
+          const actionBtn = unlocked
+            ? `<div class="w-full py-1.5 text-center rounded-xl border-2 border-[#3B322C] bg-[#DCE8D2] doodle-font text-base font-bold text-[#3B322C]">✓ On Diner Menu</div>`
+            : `<button onclick="buyFood('${food.id}')" class="doodle-btn w-full py-1.5 text-base font-bold ${canAfford ? 'bg-[#F6E3BA] hover:bg-[#EED5A0] text-[#3B322C]' : 'bg-[#E5DFD5] text-[#8C7F73] opacity-80'}">Unlock Dish • ${food.price} 🪙</button>`;
+
+          return `
+            <div class="bg-[#FAF5EE] doodle-card p-3.5 flex flex-col justify-between gap-2">
+              <div>
+                <div class="bg-[#EFE6D8] rounded-xl p-2 border border-[#3B322C]/20 mb-2">${food.svg}</div>
+                <div class="doodle-font text-xl font-bold text-[#3B322C]">${food.name}</div>
+                <div class="text-[11px] font-bold text-[#8C6D53]">${seasonBadges}</div>
+                <p class="text-xs text-[#6D523C] font-semibold mt-1">${food.desc}</p>
+              </div>
+              ${actionBtn}
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function buyDecor(id) {
+      const item = DECOR_ITEMS.find(d => d.id === id);
+      if (!item || state.ownedDecor.includes(id)) return;
+      if (state.coins < item.price) {
+        AudioEngine.playWrong();
+        showShopToast(`Need ${item.price - state.coins} more 🪙! Serve more customers to earn tips.`, '#F6E2DA');
+        return;
+      }
+      state.coins -= item.price;
+      state.ownedDecor.push(id);
+      state.equippedDecor.push(id);
+      syncCoinDisplays();
+      saveGameData();
+      applyDecorVisuals();
+      AudioEngine.playCoin();
+      showShopToast(`Purchased & equipped ${item.name}!`);
+      renderShop();
+    }
+
+    function toggleEquipDecor(id) {
+      if (!state.ownedDecor.includes(id)) return;
+      AudioEngine.playClick();
+      const idx = state.equippedDecor.indexOf(id);
+      if (idx >= 0) {
+        state.equippedDecor.splice(idx, 1);
+        showShopToast('Stored decor item away.', '#EFE6D8');
+      } else {
+        state.equippedDecor.push(id);
+        showShopToast('Equipped in your diner!');
+      }
+      saveGameData();
+      applyDecorVisuals();
+      renderShop();
+    }
+
+    function buyFood(id) {
+      const food = FOODS.find(f => f.id === id);
+      if (!food || state.unlockedFoods.includes(id)) return;
+      if (state.coins < food.price) {
+        AudioEngine.playWrong();
+        showShopToast(`Need ${food.price - state.coins} more 🪙 to unlock ${food.name}!`, '#F6E2DA');
+        return;
+      }
+      state.coins -= food.price;
+      state.unlockedFoods.push(id);
+      syncCoinDisplays();
+      saveGameData();
+      renderFoodTray();
+      AudioEngine.playCoin();
+      showShopToast(`Unlocked ${food.name}! Added to your counter menu!`);
+      renderShop();
+    }
+
+    function applyDecorVisuals() {
+      DECOR_ITEMS.forEach(item => {
+        const isEquipped = state.equippedDecor.includes(item.id);
+        const gameEl = document.getElementById(`decor-${item.id}`);
+        if (gameEl) gameEl.classList.toggle('hidden', !isEquipped);
+        const startEl = document.getElementById(`start-decor-${item.id}`);
+        if (startEl) startEl.classList.toggle('hidden', !isEquipped);
+      });
+    }
+
+    function renderDietGuide() {
+      const container = document.getElementById('guide-cards-container');
+      if (!container) return;
+
+      const groups = [
+        {
+          title: '☀️ Spring & Summer',
+          subtitle: 'Braided Rivers & Riverbanks',
+          color: 'bg-[#E6EFE0]',
+          seasonKey: 'spring'
+        },
+        {
+          title: '🌊 Autumn & Calm Winter',
+          subtitle: 'Coastal Ocean Feeding',
+          color: 'bg-[#E0ECEF]',
+          seasonKey: 'autumn'
+        },
+        {
+          title: '⛈️ Stormy Winter Weather',
+          subtitle: 'Inland Wet Paddocks',
+          color: 'bg-[#F3E6DD]',
+          seasonKey: 'storm'
+        }
+      ];
+
+      container.innerHTML = groups.map(g => {
+        const matchingFoods = FOODS.filter(f => f.seasons.includes(g.seasonKey));
+        const itemsHtml = matchingFoods.map(f => {
+          const unlocked = state.unlockedFoods.includes(f.id);
+          return `
+            <div class="flex items-center justify-between bg-[#FAF5EE] rounded-xl px-2.5 py-1.5 border border-[#3B322C]/20">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 flex-shrink-0">${f.svg.replace('w-10 h-10 sm:w-11 sm:h-11', 'w-7 h-7')}</div>
+                <div>
+                  <div class="text-xs sm:text-sm font-bold text-[#3B322C]">${f.name}</div>
+                  <div class="text-[10px] text-[#6D523C]">${f.sub}</div>
+                </div>
+              </div>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${unlocked ? 'bg-[#DCE8D2] text-[#3B322C]' : 'bg-[#EFE6D8] text-[#8C6D53]'}">
+                ${unlocked ? 'Menu ✓' : `${f.price} 🪙`}
+              </span>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="${g.color} doodle-card p-3.5 space-y-2.5">
+            <div>
+              <h3 class="text-xl sm:text-2xl font-bold text-[#3B322C]">${g.title}</h3>
+              <div class="text-xs font-bold text-[#6D523C]">${g.subtitle}</div>
+            </div>
+            <div class="space-y-1.5">${itemsHtml}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openMiniGuide() {
+      AudioEngine.playClick();
+      document.getElementById('mini-guide-modal').classList.remove('hidden');
+    }
+
+    function closeMiniGuide() {
+      AudioEngine.playClick();
+      document.getElementById('mini-guide-modal').classList.add('hidden');
+    }
+
+    /* -----------------------------------------------------------
+       4B. AUDIO & SETTINGS CONTROLS
+       ----------------------------------------------------------- */
+    function toggleQuickMute() {
+      AudioEngine.init();
+      AudioEngine.muted = !AudioEngine.muted;
+      AudioEngine.updateVolumes();
+      const icon = document.getElementById('quick-audio-icon');
+      const label = document.getElementById('quick-audio-label');
+      if (icon) icon.textContent = AudioEngine.muted ? '🔇' : '🔊';
+      if (label) label.textContent = AudioEngine.muted ? 'Muted' : 'Sound On';
+      if (!AudioEngine.muted) AudioEngine.playClick();
+    }
+
+    function toggleAudioSetting(key) {
+      AudioEngine.settings[key] = !AudioEngine.settings[key];
+      AudioEngine.updateVolumes();
+      const btn = document.getElementById(`toggle-${key}`);
+      if (btn) {
+        const isOn = AudioEngine.settings[key];
+        btn.textContent = isOn ? 'ON' : 'OFF';
+        btn.className = `doodle-btn px-4 py-1.5 text-lg font-bold ${isOn ? 'bg-[#9CAF88] text-[#3B322C]' : 'bg-[#EFE6D8] text-[#6D523C]'}`;
+      }
+      AudioEngine.playClick();
+    }
+
+    function toggleTouchSetting() {
+      AudioEngine.playClick();
+      const modes = ['auto', 'on', 'off'];
+      const next = modes[(modes.indexOf(state.touchControlMode) + 1) % modes.length];
+      state.touchControlMode = next;
+      const btn = document.getElementById('toggle-touch');
+      if (btn) btn.textContent = next.toUpperCase();
+    }
+
+    function handleResetSave() {
+      AudioEngine.playClick();
+      const btn = document.getElementById('btn-reset-save');
+      const statusText = document.getElementById('reset-status-text');
+      if (!state.resetConfirmPending) {
+        state.resetConfirmPending = true;
+        if (btn) {
+          btn.textContent = 'Confirm?';
+          btn.className = 'doodle-btn px-4 py-1.5 text-lg font-bold bg-[#C87D65] text-[#FAF5EE]';
+        }
+        if (statusText) statusText.textContent = 'Tap Confirm? again to reset coins, decor & foods.';
+        setTimeout(() => {
+          if (state.resetConfirmPending) {
+            state.resetConfirmPending = false;
+            if (btn) {
+              btn.textContent = 'Reset';
+              btn.className = 'doodle-btn px-4 py-1.5 text-lg font-bold bg-[#E6B87D] hover:bg-[#DBA765] text-[#3B322C]';
+            }
+            if (statusText) statusText.textContent = 'Resets coins to 25 🪙, decor, and unlocked foods';
+          }
+        }, 4000);
+        return;
+      }
+
+      state.resetConfirmPending = false;
+      state.coins = 25;
+      state.unlockedFoods = ['mayfly', 'galaxiid_fish', 'earthworm', 'ocean_krill'];
+      state.ownedDecor = [];
+      state.equippedDecor = [];
+      state.level = 1;
+      state.seasonIndex = 0;
+      localStorage.removeItem(SAVE_KEY);
+      syncCoinDisplays();
+      applyDecorVisuals();
+      renderFoodTray();
+
+      if (btn) {
+        btn.textContent = 'Reset!';
+        btn.className = 'doodle-btn px-4 py-1.5 text-lg font-bold bg-[#9CAF88] text-[#3B322C]';
+      }
+      if (statusText) statusText.textContent = 'Progress reset to 25 🪙!';
+      setTimeout(() => {
+        if (btn) {
+          btn.textContent = 'Reset';
+          btn.className = 'doodle-btn px-4 py-1.5 text-lg font-bold bg-[#E6B87D] hover:bg-[#DBA765] text-[#3B322C]';
+        }
+        if (statusText) statusText.textContent = 'Resets coins to 25 🪙, decor, and unlocked foods';
+      }, 2000);
+    }
+
+    /* -----------------------------------------------------------
+       5. CORE CAFE GAMEPLAY (ORDERS, SEASONAL MENU & SERVING)
+       ----------------------------------------------------------- */
+    function renderFoodTray() {
+      const tray = document.getElementById('food-tray');
+      if (!tray) return;
+
+      const season = SEASONS[state.seasonIndex % SEASONS.length];
+      const availableFoods = FOODS.filter(f => state.unlockedFoods.includes(f.id));
+
+      // Sort in-season foods first so seasonal menu changes are immediately clear
+      const sortedFoods = [...availableFoods].sort((a, b) => {
+        const aIn = a.seasons.includes(season.id) ? 0 : 1;
+        const bIn = b.seasons.includes(season.id) ? 0 : 1;
+        return aIn - bIn;
+      });
+
+      const seasonTrayLabels = {
+        spring: '🌸 Spring Menu: Braided River & Land Dishes',
+        autumn: '🍂 Autumn Menu: Coastal Ocean Plankton & Krill',
+        storm: '⛈️ Winter Storm Menu: Inland Wet Paddock Worms & Grubs',
+        summer: '☀️ Summer Menu: Sunny River, Bank & Lizard Dishes',
+        winter: '❄️ Calm Winter Menu: Coastal Sea Crustaceans'
+      };
+      const labelEl = document.getElementById('tray-season-label');
+      if (labelEl) {
+        labelEl.textContent = seasonTrayLabels[season.id] || `${season.icon} ${season.title} Menu`;
+      }
+
+      tray.innerHTML = sortedFoods.map(food => {
+        const isInSeason = food.seasons.includes(season.id);
+        const cardStyle = isInSeason
+          ? 'bg-[#FAF5EE] hover:bg-[#EFE6D8] ring-2 ring-[#9CAF88]'
+          : 'bg-[#E6DDD0]/80 hover:bg-[#DED3C3] opacity-65';
+        const statusBadge = isInSeason
+          ? `<span class="text-[9px] sm:text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-[#DCE8D2] text-[#3B322C] border border-[#3B322C]/30 mt-0.5">In Season</span>`
+          : `<span class="text-[9px] sm:text-[10px] font-semibold px-1.5 py-0.2 rounded-full bg-[#D8CEC0] text-[#6D523C] mt-0.5">Off Season</span>`;
+
+        return `
+          <button onclick="serveFood('${food.id}')"
+            class="doodle-btn ${cardStyle} p-1.5 sm:p-2 flex flex-col items-center justify-center text-center transition-all">
+            ${food.svg}
+            <span class="text-[11px] sm:text-xs font-bold text-[#3B322C] leading-tight mt-0.5 line-clamp-1">${food.name}</span>
+            ${statusBadge}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function cycleSeasonManual() {
+      if (state.isBusy || state.predatorActive) return;
+      AudioEngine.playClick();
+      state.seasonIndex = (state.seasonIndex + 1) % SEASONS.length;
+      saveGameData();
+      const season = SEASONS[state.seasonIndex];
+      applySeasonVisuals(season);
+      renderFoodTray();
+      showFeedback(`${season.icon} Switched to ${season.title}! Menu updated for ${season.subtitle}.`, '#EFE6D8');
+      spawnNextCustomer();
+    }
+
+    function applySeasonVisuals(season) {
+      document.getElementById('season-icon').textContent = season.icon;
+      document.getElementById('season-title').textContent = season.title;
+      document.getElementById('season-sub').textContent = season.subtitle;
+      document.getElementById('hud-level').textContent = state.level;
+
+      const sky = document.getElementById('win-sky');
+      if (sky) sky.setAttribute('fill', season.skyColor);
+
+      ['spring', 'winter', 'storm'].forEach(sc => {
+        const el = document.getElementById(`scenery-${sc}`);
+        if (el) el.classList.toggle('hidden', season.scenery !== sc);
+      });
+
+      const scarf = document.getElementById('bird-scarf');
+      if (scarf) scarf.classList.toggle('hidden', !season.scarf);
+
+      const chalk1 = document.getElementById('chalkboard-season-line1');
+      const chalk2 = document.getElementById('chalkboard-season-line2');
+      if (chalk1) chalk1.textContent = season.chalk1;
+      if (chalk2) chalk2.textContent = season.chalk2;
+    }
+
+    function updateProgressDots() {
+      const dotsEl = document.getElementById('hud-progress-dots');
+      if (!dotsEl) return;
+      let html = '';
+      for (let i = 0; i < state.customersPerShift; i++) {
+        const filled = i < state.customersServed;
+        html += `<span class="w-3 h-3 rounded-full border-2 border-[#3B322C] ${filled ? 'bg-[#9CAF88]' : 'bg-[#EFE6D8]'}"></span>`;
+      }
+      dotsEl.innerHTML = html;
+    }
+
+    function showFeedback(text, bg = '#FAF5EE') {
+      const banner = document.getElementById('feedback-banner');
+      if (!banner) return;
+      banner.textContent = text;
+      banner.style.backgroundColor = bg;
+      banner.classList.remove('hidden');
+      clearTimeout(banner._timer);
+      banner._timer = setTimeout(() => {
+        banner.classList.add('hidden');
+      }, 2200);
+    }
+
+    function startGame() {
+      AudioEngine.init();
+      startShift();
+      showScreen('game');
+    }
+
+    function startShift() {
+      state.customersServed = 0;
+      state.mistakesThisShift = 0;
+      state.streak = 0;
+      state.shiftOrderCoinsEarned = 0;
+      state.predatorSpawnedThisShift = false;
+      state.isBusy = false;
+      endPredatorMode(true);
+
+      const season = SEASONS[state.seasonIndex % SEASONS.length];
+      applySeasonVisuals(season);
+      applyDecorVisuals();
+      renderFoodTray();
+      updateProgressDots();
+      spawnNextCustomer();
+    }
+
+    function spawnNextCustomer() {
+      state.isBusy = false;
+      document.getElementById('bird-eye-normal').classList.remove('hidden');
+      document.getElementById('bird-eye-happy').classList.add('hidden');
+
+      // Rare stoat predator encounter (once per shift after at least 1 customer served)
+      if (!state.predatorSpawnedThisShift && state.customersServed >= 1 && Math.random() < 0.28) {
+        startPredatorMode();
+        return;
+      }
+
+      const season = SEASONS[state.seasonIndex % SEASONS.length];
+      const validFoods = FOODS.filter(
+        f => state.unlockedFoods.includes(f.id) && f.seasons.includes(season.id)
+      );
+      const chosenFood = validFoods[Math.floor(Math.random() * validFoods.length)] || FOODS[0];
+
+      const dialogueKey = (season.id === 'storm' && ORDER_DIALOGUES[`storm_${chosenFood.id}`])
+        ? `storm_${chosenFood.id}`
+        : chosenFood.id;
+      const lines = ORDER_DIALOGUES[dialogueKey] || [
+        { text: `"Cheep! May I please have a ${chosenFood.name.toLowerCase()}?"`, hint: `${season.title}: ${season.subtitle}` }
+      ];
+      const line = lines[Math.floor(Math.random() * lines.length)];
+
+      state.currentOrder = {
+        foodId: chosenFood.id,
+        foodName: chosenFood.name
+      };
+      state.orderStartTime = Date.now();
+
+      document.getElementById('order-text').textContent = line.text;
+      document.getElementById('order-hint').textContent = line.hint;
+
+      const bubble = document.getElementById('order-bubble');
+      bubble.classList.remove('animate-pop');
+      void bubble.offsetWidth;
+      bubble.classList.add('animate-pop');
+    }
+
+    function serveFood(foodId) {
+      if (state.isBusy || state.predatorActive || !state.currentOrder) return;
+      const season = SEASONS[state.seasonIndex % SEASONS.length];
+
+      if (foodId === state.currentOrder.foodId) {
+        state.isBusy = true;
+        state.customersServed++;
+        state.streak++;
+
+        const elapsedSec = (Date.now() - state.orderStartTime) / 1000;
+        const speedBonus = elapsedSec <= 5.5 ? 2 : 0;
+        const streakBonus = state.streak >= 2 ? 2 : 0;
+        const earned = 6 + speedBonus + streakBonus;
+
+        state.shiftOrderCoinsEarned += earned;
+        awardCoins(earned, speedBonus > 0 ? `+${earned} 🪙 Fast Tip!` : `+${earned} 🪙`);
+        AudioEngine.playServeSuccess();
+
+        document.getElementById('bird-eye-normal').classList.add('hidden');
+        document.getElementById('bird-eye-happy').classList.remove('hidden');
+        updateProgressDots();
+
+        showFeedback(`Cheep! Delicious ${state.currentOrder.foodName}! (+${earned} 🪙)`, '#DCE8D2');
+
+        setTimeout(() => {
+          if (state.customersServed >= state.customersPerShift) {
+            triggerLevelUp();
+          } else {
+            spawnNextCustomer();
+          }
+        }, 1050);
+      } else {
+        // Wrong season/food -> Deduct 3 coins, reset streak & give helpful hint
+        state.mistakesThisShift++;
+        state.streak = 0;
+        const lost = deductCoins(3);
+        AudioEngine.playWrong();
+        const birdEl = document.getElementById('customer-bird');
+        birdEl.classList.remove('animate-shake');
+        void birdEl.offsetWidth;
+        birdEl.classList.add('animate-shake');
+
+        const lossNote = lost > 0 ? ` (-${lost} 🪙)` : '';
+        let hintMsg = `Wrong dish${lossNote}! Check the ${season.title} menu!`;
+        if (season.id === 'storm') {
+          hintMsg = `⛈️ Too stormy at sea${lossNote}! Serve Earthworms or Paddock Grubs from wet paddocks!`;
+        } else if (season.id === 'autumn' || season.id === 'winter') {
+          hintMsg = `🌊 It's coastal season${lossNote}! Try Ocean Krill or Marine Amphipods!`;
+        } else {
+          hintMsg = `🏞️ It's river season${lossNote}! Try Mayflies, Fish, Worms, Skinks, or River Bugs!`;
+        }
+        showFeedback(hintMsg, '#F6E2DA');
+      }
+    }
+
+    /* -----------------------------------------------------------
+       6. RARE PREDATOR ENCOUNTER (+15 🪙 HERO TIP)
+       ----------------------------------------------------------- */
+    function startPredatorMode() {
+      state.predatorActive = true;
+      state.predatorSpawnedThisShift = true;
+      state.playerPos = 50;
+      state.predatorPos = Math.random() > 0.5 ? 22 : 78;
+      state.predatorDir = state.predatorPos < 50 ? 1 : -1;
+
+      AudioEngine.playAlert();
+
+      document.getElementById('customer-container').classList.add('hidden');
+      document.getElementById('food-tray').classList.add('hidden');
+      document.getElementById('predator-container').classList.remove('hidden');
+      document.getElementById('predator-controls').classList.remove('hidden');
+
+      updatePredatorPositions();
+
+      // Stoat paces gently back and forth along the counter
+      clearInterval(state.predatorInterval);
+      state.predatorInterval = setInterval(() => {
+        if (!state.predatorActive) return;
+        state.predatorPos += state.predatorDir * 2.2;
+        if (state.predatorPos >= 82) {
+          state.predatorPos = 82;
+          state.predatorDir = -1;
+        } else if (state.predatorPos <= 18) {
+          state.predatorPos = 18;
+          state.predatorDir = 1;
+        }
+        updatePredatorPositions();
+      }, 65);
+    }
+
+    function updatePredatorPositions() {
+      document.getElementById('player-spoon').style.left = `${state.playerPos}%`;
+      document.getElementById('predator-sprite').style.left = `${state.predatorPos}%`;
+    }
+
+    function movePlayer(dir) {
+      if (!state.predatorActive) return;
+      AudioEngine.playClick();
+      state.playerPos = Math.max(15, Math.min(85, state.playerPos + dir * 11));
+      updatePredatorPositions();
+    }
+
+    function attemptShoo() {
+      if (!state.predatorActive) return;
+      AudioEngine.playBonk();
+
+      // Swing spoon animation
+      const spoon = document.getElementById('spoon-svg');
+      spoon.style.transform = 'rotate(-35deg) scale(1.15)';
+      setTimeout(() => {
+        spoon.style.transform = 'rotate(0deg) scale(1)';
+      }, 160);
+
+      const distance = Math.abs(state.playerPos - state.predatorPos);
+      if (distance <= 15) {
+        // Successfully shooed predator away! Award +15 🪙 Hero Tip
+        state.shiftOrderCoinsEarned += 15;
+        awardCoins(15, '+15 🪙 Hero Tip!');
+        showFeedback('🥄 Bonk! Stoat ran back outside! +15 🪙 Hero Tip!', '#DCE8D2');
+        endPredatorMode(false);
+        setTimeout(() => {
+          spawnNextCustomer();
+        }, 1150);
+      } else {
+        state.mistakesThisShift++;
+        showFeedback('Missed! Line up above the stoat & press Down!', '#F6E2DA');
+      }
+    }
+
+    function endPredatorMode(silent) {
+      state.predatorActive = false;
+      clearInterval(state.predatorInterval);
+      document.getElementById('predator-container').classList.add('hidden');
+      document.getElementById('predator-controls').classList.add('hidden');
+      document.getElementById('customer-container').classList.remove('hidden');
+      document.getElementById('food-tray').classList.remove('hidden');
+    }
+
+    // Chromebook & Desktop Keyboard Controls (Left, Right, Down Arrow)
+    window.addEventListener('keydown', (e) => {
+      if (state.screen !== 'game') return;
+
+      if (state.predatorActive) {
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+          e.preventDefault();
+          movePlayer(-1);
+        } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+          e.preventDefault();
+          movePlayer(1);
+        } else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S' || e.key === ' ') {
+          e.preventDefault();
+          attemptShoo();
+        }
+      }
+    });
+
+    /* -----------------------------------------------------------
+       7. LEVEL UP & STAR RATING SCREEN (WITH ITEMIZED COIN BONUS)
+       ----------------------------------------------------------- */
+    function triggerLevelUp() {
+      AudioEngine.playLevelUp();
+
+      // Calculate 1 to 5 stars based on accuracy
+      const stars = Math.max(1, Math.min(5, 5 - state.mistakesThisShift));
+      const starBonus = stars * 5; // 5 to 25 coins shift bonus
+
+      // Add star shift bonus to player's wallet
+      state.coins += starBonus;
+      syncCoinDisplays();
+
+      const starContainer = document.getElementById('star-rating-display');
+      let starsHtml = '';
+      for (let i = 1; i <= 5; i++) {
+        starsHtml += i <= stars
+          ? `<span class="drop-shadow-[2px_2px_0px_#3B322C]">⭐</span>`
+          : `<span class="opacity-30 grayscale">⭐</span>`;
+      }
+      starContainer.innerHTML = starsHtml;
+
+      const labels = {
+        5: '5 Stars! Master Tarapirohe Chef!',
+        4: '4 Stars! Wonderful Cozy Service!',
+        3: '3 Stars! Good Seasonal Knowledge!',
+        2: '2 Stars! Keep Checking the Field Guide!',
+        1: '1 Star! Practice Makes Perfect!'
+      };
+      document.getElementById('star-rating-label').textContent = labels[stars];
+
+      // Itemized coin breakdown
+      const netOrderCoins = state.shiftOrderCoinsEarned;
+      document.getElementById('summary-order-coins').textContent = `${netOrderCoins >= 0 ? '+' : ''}${netOrderCoins} 🪙`;
+      document.getElementById('summary-star-bonus').textContent = `+${starBonus} 🪙`;
+      const totalEarned = netOrderCoins + starBonus;
+      document.getElementById('summary-total-earned').textContent = `${totalEarned >= 0 ? '+' : ''}${totalEarned} 🪙`;
+
+      // Rotate through the 3 educational Tarapirohe fun facts
+      const fact = FUN_FACTS[(state.level - 1) % FUN_FACTS.length];
+      document.getElementById('levelup-fact-text').textContent = fact;
+
+      // Advance saved shift counters so progress persists even if they visit Shop next
+      state.level++;
+      state.seasonIndex++;
+      saveGameData();
+
+      showScreen('levelup');
+    }
+
+    function nextShift() {
+      startShift();
+      showScreen('game');
+    }
+
+    // Initialize saved coins, decor, and foods on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSaveData();
+      renderFoodTray();
+    });
+  </script>
+</body>
+</html>
